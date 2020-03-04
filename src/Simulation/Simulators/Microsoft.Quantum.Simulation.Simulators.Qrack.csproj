@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.10.2002.2610" />
+    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.10.2002.2610" />
+    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.10.2002.2610" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Microsoft.Quantum.Simulation.Common.csproj" />
+  </ItemGroup>
+
+</Project>
