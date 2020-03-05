@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Common\Microsoft.Quantum.Simulation.Common.csproj" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <DefineConstants>_WINDOWS</DefineConstants>
+  </PropertyGroup>
+
 </Project>
