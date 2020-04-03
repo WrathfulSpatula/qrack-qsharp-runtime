@@ -34,9 +34,6 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 if (sim is IDisposable dis) dis.Dispose();
             }
 
-            TestOne(new QuantumSimulator(), "Simulator");
-            TestOne(new ToffoliSimulator(), "Toffoli");
-            TestOne(new ResourcesEstimator(), "hello");
             TestOne(new QrackSimulator(), "hello");
         }
 

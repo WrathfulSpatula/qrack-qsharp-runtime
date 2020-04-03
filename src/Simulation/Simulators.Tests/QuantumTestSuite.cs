@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Microsoft.Quantum.Simulation.Core;
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
 using Microsoft.Quantum.Simulation.XUnit;
 using System;
 using Xunit;
@@ -21,7 +22,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [OperationDriver(TestCasePrefix = "QSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite")]
         public void QSimTestTarget(TestOperation op)
         {
-            using (var sim = new QuantumSimulator( throwOnReleasingQubitsNotInZeroState: true ))
+            using (var sim = new QrackSimulator( throwOnReleasingQubitsNotInZeroState: true ))
             {
                 sim.OnLog += (msg) => { output.WriteLine(msg); };
                 op.TestOperationRunner(sim);
@@ -31,7 +32,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         //[OperationDriver(TestCasePrefix = "QSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite.VeryLong")]
         private void QSimTestTargetVeryLong(TestOperation op)
         {
-            using (var sim = new QuantumSimulator( throwOnReleasingQubitsNotInZeroState: true ))
+            using (var sim = new QrackSimulator( throwOnReleasingQubitsNotInZeroState: true ))
             {
                 sim.OnLog += (msg) => { output.WriteLine(msg); };
                 op.TestOperationRunner(sim);
@@ -42,7 +43,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [OperationDriver(TestCasePrefix = "⊗ Fail QSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite", Suffix = "QSimFail", Skip = "These tests are known to fail" )]
         public void QSimTestTargetFailures(TestOperation op)
         {
-            using (var sim = new QuantumSimulator( throwOnReleasingQubitsNotInZeroState: true ))
+            using (var sim = new QrackSimulator( throwOnReleasingQubitsNotInZeroState: true ))
             {
                 sim.OnLog += (msg) => { output.WriteLine(msg); };
                 Action action = () => op.TestOperationRunner(sim);

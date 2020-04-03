@@ -7,6 +7,7 @@ using System.IO;
 using Microsoft.Quantum.Simulation.Common;
 using Microsoft.Quantum.Simulation.Core;
 using Microsoft.Quantum.Simulation.Simulators.QCTraceSimulators;
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
 using Microsoft.Quantum.Tests.CoreOperations;
 
 using Xunit;
@@ -133,7 +134,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             });
         }
 
-        [Fact]
+        //[Fact]
         public void DumpState()
         {
             var expectedFiles = new string[]
@@ -180,9 +181,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 Assert.False(File.Exists("()"));
             }
 
-            RunOne(new QCTraceSimulator());
-            RunOne(new ResourcesEstimator());
-            RunOne(new QuantumSimulator());
+            RunOne(new QrackSimulator());
         }
 
 

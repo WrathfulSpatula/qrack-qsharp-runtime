@@ -63,7 +63,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
         {
             get
             {
-                return "Quantum Simulator";
+                return "Qrack Simulator";
             }
         }
 

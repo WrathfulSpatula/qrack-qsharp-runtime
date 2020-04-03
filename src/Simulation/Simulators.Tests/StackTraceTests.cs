@@ -13,6 +13,7 @@ using Microsoft.Quantum.Simulation.Simulators.Exceptions;
 using Xunit.Abstractions;
 using System.Text;
 using System.Collections.Generic;
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
@@ -29,7 +30,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void AllocateQubit2Test()
         {
-            using (var sim = new QuantumSimulator())
+            using (var sim = new QrackSimulator())
             {
                 try
                 {
@@ -58,7 +59,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         //[Fact]
         public void AlwaysFail4Test()
         {
-            using (var sim = new QuantumSimulator())
+            using (var sim = new QrackSimulator())
             {
                 try
                 {

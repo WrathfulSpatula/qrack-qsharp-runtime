@@ -12,6 +12,22 @@ using static System.Math;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
+    public class State
+    {
+        public State((double, double) alpha, (double, double) beta)
+        {
+            Alpha = new Microsoft.Quantum.Math.Complex(alpha);
+            Beta = new Microsoft.Quantum.Math.Complex(beta);
+        }
+
+        public Microsoft.Quantum.Math.Complex Alpha { get; }
+
+        public Microsoft.Quantum.Math.Complex Beta { get; }
+
+        public (Microsoft.Quantum.Math.Complex, Microsoft.Quantum.Math.Complex) Value => (Alpha, Beta);
+
+
+    }
 
     public partial class QrackSimulatorTests
     {
