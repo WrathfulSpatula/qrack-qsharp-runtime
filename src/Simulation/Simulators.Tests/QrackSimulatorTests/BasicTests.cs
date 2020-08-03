@@ -20,7 +20,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         {
             using (var subject = new QrackSimulator())
             {
-                Assert.Equal("Qrack Simulator", subject.Name);
+                Assert.Equal("Quantum Simulator", subject.Name);
             }
         }
 

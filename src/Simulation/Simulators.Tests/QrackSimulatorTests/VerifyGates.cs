@@ -4,7 +4,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Quantum.Simulation.Core;
-using Microsoft.Quantum.Simulation.Simulators.Qrack;
 using Microsoft.Quantum.Simulation.Simulators.Tests.Circuits;
 using Xunit;
 
@@ -12,7 +11,7 @@ using static System.Math;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-    public class State
+    public class State 
     {
         public State((double, double) alpha, (double, double) beta)
         {
@@ -29,7 +28,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
     }
 
-    public partial class QrackSimulatorTests
+    public partial class QuantumSimulatorTests
     {
         public const int seed = 19740212;
         public static Random r = new Random(seed);
@@ -92,7 +91,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyH()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.H>();
                 VerifyGate(sim, gate, new State[]
@@ -108,7 +107,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyX()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.X>();
 
@@ -125,7 +124,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyY()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.Y>();
 
@@ -142,7 +141,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyZ()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.Z>();
 
@@ -159,7 +158,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyS()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.S>();
 
@@ -176,7 +175,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyT()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.T>();
 
@@ -193,7 +192,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyR1()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var angle = PI * r.NextDouble();
                 Func<Qubit, (double, Qubit)> mapper = (q) => (angle, q);
@@ -277,7 +276,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             Func<Qubit, (double, Qubit)> mapper = (q)
                 => (angle, q);
 
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.Rx>().Partial(mapper);
                 VerifyGate(sim, gate, RExpectedStates(Pauli.PauliX, angle));
@@ -293,7 +292,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             Func<Qubit, (double, Qubit)> mapper = (q)
                 => (angle, q);
 
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.Ry>().Partial(mapper);
                 VerifyGate(sim, gate, RExpectedStates(Pauli.PauliY, angle));
@@ -309,7 +308,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             Func<Qubit, (double, Qubit)> mapper = (q)
                 => (angle, q);
 
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.Rz>().Partial(mapper);
                 VerifyGate(sim, gate, RExpectedStates(Pauli.PauliZ, angle));
@@ -327,7 +326,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             Func<(double, Qubit), (Pauli, double, Qubit)> needsAngle = (__arg) 
                 => (Pauli.PauliI, __arg.Item1, __arg.Item2);
 
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var gate = sim.Get<Intrinsic.R>().Partial(mapper);
                 VerifyGate(sim, gate, RExpectedStates(Pauli.PauliI, angle));
@@ -340,7 +339,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyRFrac()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var allBases = new[] { Pauli.PauliI, Pauli.PauliX, Pauli.PauliZ, Pauli.PauliY };
 
@@ -362,7 +361,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
         private void VerifyExp(Pauli pauli)
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var angle = 2 * PI * r.NextDouble();
 
@@ -407,7 +406,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimVerifyExpFrac()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var allBases = new[] { Pauli.PauliI, Pauli.PauliX, Pauli.PauliZ, Pauli.PauliY };
 
@@ -431,7 +430,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimMeasure()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var op = sim.Get<ICallable<QVoid, QVoid>, JointMeasureTest>();
                 op.Apply(QVoid.Instance);
@@ -441,7 +440,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void QSimM()
         {
-            using (var sim = new QrackSimulator())
+            using (var sim = new QuantumSimulator())
             {
                 var m = sim.Get<Intrinsic.M>();
 

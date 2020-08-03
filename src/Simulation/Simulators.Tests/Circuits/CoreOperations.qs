@@ -540,7 +540,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests.Circuits {
         return Foo(3);
     }
 
-    operation ToffoliUsingQubitCheck () : Unit 
+    operation UsingQubitCheck () : Unit 
     {
         using (q = Qubit())
         {
@@ -549,15 +549,25 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests.Circuits {
         }
     }
 
-    operation ToffoliBorrowingQubitCheck () : Unit
+    operation ReleaseMeasuredQubitCheck () : Unit 
     {
         using (q = Qubit())
         {
-            ToffoliBorrower();
+            X(q);
+            let r = M(q);
+            // Should not raise an exception
         }
     }
 
-    operation ToffoliBorrower() : Unit
+    operation BorrowingQubitCheck () : Unit
+    {
+        using (q = Qubit())
+        {
+            QubitBorrower();
+        }
+    }
+
+    operation QubitBorrower() : Unit
     {
         borrowing (q = Qubit())
         {
@@ -593,5 +603,24 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests.Circuits {
 
         AssertEqual(true, (pi > 3.14 and pi < 3.15));
     }
-}
 
+    internal function EmptyInternalFunction() : Unit { }
+
+    internal operation EmptyInternalOperation() : Unit { }
+
+    internal newtype InternalType = Int;
+
+    internal operation MakeInternalType() : InternalType {
+        return InternalType(5);
+    }
+
+    // This is a public operation that uses an internal type inside to test the access modifiers of the generated
+    // operation properties.
+    operation InternalCallablesTest() : Unit {
+        EmptyInternalFunction();
+        EmptyInternalOperation();
+        let x = InternalType(3);
+        let y = MakeInternalType();
+        AssertEqual(15, x! * y!);
+    }
+}

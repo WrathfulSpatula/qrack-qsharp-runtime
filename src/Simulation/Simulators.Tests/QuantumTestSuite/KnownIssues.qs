@@ -19,7 +19,7 @@ namespace Microsoft.Quantum.Simulation.TestSuite {
     }
     
     
-    operation ControlledExpWithIPauliTestQSimFail () : Unit {
+    operation ControlledExpWithIPauliTest () : Unit {
         
         let controls = 1;
         let phi = 0.1;

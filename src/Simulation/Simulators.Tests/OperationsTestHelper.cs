@@ -143,7 +143,6 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
         public static void RunWithMultipleSimulators(Action<SimulatorBase> test)
         {
-            // Only QrackSimulator available, for now
             var simulators = new SimulatorBase[] { new QrackSimulator() };
 
             foreach (var s in simulators)

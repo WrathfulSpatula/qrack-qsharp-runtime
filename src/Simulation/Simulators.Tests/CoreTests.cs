@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Reflection;
+using System.Text;
+using Microsoft.Quantum.QsCompiler;
 using Microsoft.Quantum.Simulation.Common;
 using Microsoft.Quantum.Simulation.Core;
 using Microsoft.Quantum.Simulation.Simulators.QCTraceSimulators;
@@ -15,8 +18,6 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-    using Helper = Microsoft.Quantum.Simulation.Simulators.Tests.OperationsTestHelper;
-
     public class CoreTests
     {
         private readonly ITestOutputHelper output;
@@ -27,9 +28,26 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
+        public void BasicExecution()
+        {
+            var asmPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var exe = Path.Combine(asmPath, "TestExe", "QsharpExe.dll");
+
+            ProcessRunner.Run("dotnet", exe, out var _, out StringBuilder error, out int exitCode, out Exception ex);
+            Assert.Null(ex);
+            Assert.Equal(1, exitCode);
+            Assert.Contains("NotImplementedException", error.ToString());
+
+            ProcessRunner.Run("dotnet", $"{exe} --simulator QrackSimulator", out var _, out error, out exitCode, out ex);
+            Assert.Null(ex);
+            Assert.Equal(0, exitCode);
+            Assert.Empty(error.ToString().Trim());
+        }
+
+        [Fact]
         public void Borrowing()
         {
-            Helper.RunWithMultipleSimulators((s) =>
+            OperationsTestHelper.RunWithMultipleSimulators((s) =>
             {
                 var tracker = new StartTracker(s);
 
@@ -45,26 +63,26 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
                 BorrowingTest.Run(s).Wait();
 
-                var tracer = Helper.GetTracer<(long, Qubit)>(s);
+                var tracer = OperationsTestHelper.GetTracer<(long, Qubit)>(s);
 
-                var testOne = new System.Action<int, OperationFunctor, (int, Qubit)>((callsCount, variant, info) =>
+                var testOne = new Action<int, OperationFunctor, (int, Qubit)>((int callsCount, OperationFunctor variant, (int, Qubit) info) =>
                 {
                     var (available, q) = info;
                     Assert.Equal(callsCount, tracer.Log.GetNumberOfCalls(variant, (available, q)));
                 });
 
-                var testOneBody = new System.Action<int, (int, Qubit)>((callsCount, info) => testOne(callsCount, OperationFunctor.Body, info));
-                var testOneAdjoint = new System.Action<int, (int, Qubit)>((callsCount, info) => testOne(callsCount, OperationFunctor.Adjoint, info));
-                var testOneCtrl = new System.Action<int, (int, Qubit)>((callsCount, info) => testOne(callsCount, OperationFunctor.Controlled, info));
-                var testOneCtrlAdj = new System.Action<int, (int, Qubit)>((callsCount, info) => testOne(callsCount, OperationFunctor.ControlledAdjoint, info));
+                var testOneBody = new Action<int, (int, Qubit)>((callsCount, info) => testOne(callsCount, OperationFunctor.Body, info));
+                var testOneAdjoint = new Action<int, (int, Qubit)>((callsCount, info) => testOne(callsCount, OperationFunctor.Adjoint, info));
+                var testOneCtrl = new Action<int, (int, Qubit)>((callsCount, info) => testOne(callsCount, OperationFunctor.Controlled, info));
+                var testOneCtrlAdj = new Action<int, (int, Qubit)>((callsCount, info) => testOne(callsCount, OperationFunctor.ControlledAdjoint, info));
 
                 testOneBody(6, (0, q5));
                 testOneBody(6, (0, q6));
                 testOneBody(1, (1, q0));
                 testOneBody(1, (1, q1));
                 testOneBody(1, (1, q4));
-                testOneBody(1, (1, q5));
-                testOneBody(2, (1, q6));
+                testOneBody(3, (1, q5));
+                testOneBody(0, (1, q6));
                 testOneBody(2, (2, q2));
                 testOneBody(2, (2, q3));
                 testOneBody(1, (3, q0));
@@ -82,8 +100,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 testOneAdjoint(1, (1, q0));
                 testOneAdjoint(1, (1, q1));
                 testOneAdjoint(1, (1, q4));
-                testOneAdjoint(2, (1, q5));
-                testOneAdjoint(1, (1, q6));
+                testOneAdjoint(3, (1, q5));
+                testOneAdjoint(0, (1, q6));
                 testOneAdjoint(2, (2, q2));
                 testOneAdjoint(2, (2, q3));
                 testOneAdjoint(1, (3, q2));
@@ -99,8 +117,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 testOneCtrl(1, (1, q0));
                 testOneCtrl(1, (1, q1));
                 testOneCtrl(1, (1, q4));
-                testOneCtrl(1, (1, q5));
-                testOneCtrl(1, (1, q6));
+                testOneCtrl(2, (1, q5));
+                testOneCtrl(0, (1, q6));
                 testOneCtrl(0, (2, q0));
                 testOneCtrl(0, (2, q1));
                 testOneCtrl(2, (2, q2));
@@ -134,7 +152,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             });
         }
 
-        //[Fact]
+        [Fact]
         public void DumpState()
         {
             var expectedFiles = new string[]
@@ -181,6 +199,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 Assert.False(File.Exists("()"));
             }
 
+            OperationsTestHelper.RunWithMultipleSimulators((s) => RunOne(s as IOperationFactory));
             RunOne(new QrackSimulator());
         }
 
@@ -213,7 +232,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 }
             }
 
-            Helper.RunWithMultipleSimulators((s) => RunOne(s as IOperationFactory));
+            OperationsTestHelper.RunWithMultipleSimulators((s) => RunOne(s as IOperationFactory));
             RunOne(new QCTraceSimulator());
             RunOne(new ResourcesEstimator());
         }
@@ -221,9 +240,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void ZeroQubits()
         {
-            Helper.RunWithMultipleSimulators((s) =>
+            OperationsTestHelper.RunWithMultipleSimulators((s) =>
             {
-                var tracer = Helper.GetTracer<string>(s);
+                var tracer = OperationsTestHelper.GetTracer<string>(s);
 
                 ZeroQubitsTest.Run(s).Wait();
 
@@ -234,7 +253,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void InterpolatedStrings()
         {
-            Helper.RunWithMultipleSimulators((s) =>
+            OperationsTestHelper.RunWithMultipleSimulators((s) =>
             {
                 Circuits.InterpolatedStringTest.Run(s).Wait(); // Throws if it doesn't succeed
             });
@@ -243,7 +262,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void RandomOperation()
         {
-            Helper.RunWithMultipleSimulators((s) =>
+            OperationsTestHelper.RunWithMultipleSimulators((s) =>
             {
                 Circuits.RandomOperationTest.Run(s).Wait(); // Throws if it doesn't succeed
             });
@@ -252,7 +271,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void BigInts()
         {
-            Helper.RunWithMultipleSimulators((s) =>
+            OperationsTestHelper.RunWithMultipleSimulators((s) =>
             {
                 Circuits.BigIntTest.Run(s).Wait(); // Throws if it doesn't succeed
             });
@@ -277,5 +296,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             }
             Assert.Equal(1, exceptionCount); // check that we cought exception once
         }
+
+        [Fact]
+        public void InternalCallables() =>
+            OperationsTestHelper.RunWithMultipleSimulators(s => Circuits.InternalCallablesTest.Run(s).Wait());
     }
 }
