@@ -23,8 +23,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 
             public uint SimulatorId { get; private set; }
 
-            public QrackSimQubitManager
-(bool throwOnReleasingQubitsNotInZeroState = true, long qubitCapacity = 32, bool mayExtendCapacity = true, bool disableBorrowing = false)
+            public QrackSimQubitManager(bool throwOnReleasingQubitsNotInZeroState = true, long qubitCapacity = 32, bool mayExtendCapacity = true, bool disableBorrowing = false)
                 : base(qubitCapacity, mayExtendCapacity, disableBorrowing)
             {
                 this.throwOnReleasingQubitsNotInZeroState = throwOnReleasingQubitsNotInZeroState;
@@ -64,13 +63,14 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 base.ReleaseOneQubit(qubit, usedOnlyForBorrowing);
                 if (qubit != null)
                 {
-                    bool areAllReleasedQubitsZero = ReleaseOne(this.SimulatorId, (uint)qubit.Id);
-                    if (!areAllReleasedQubitsZero && throwOnReleasingQubitsNotInZeroState)
+                    bool isReleasedQubitZero = ReleaseOne(this.SimulatorId, (uint)qubit.Id);
+                    if (!(isReleasedQubitZero || qubit.IsMeasured) && throwOnReleasingQubitsNotInZeroState)
                     {
                         throw new ReleasedQubitsAreNotInZeroState();
                     }
                 }
             }
         }
+
     }
 }

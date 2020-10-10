@@ -28,9 +28,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             /// <summary>
             /// Basic constructor. Takes the simulator to probe.
             /// </summary>
-            public StateDumper(QrackSimulator qsim)
+            public StateDumper(QrackSimulator QrackSim)
             {
-                this.Simulator = qsim;
+                this.Simulator = QrackSim;
             }
 
             /// <summary>
@@ -76,7 +76,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
         {
             private int _maxCharsStateId;
 
-            public SimpleDumper(QrackSimulator qsim, Action<string> channel) : base(qsim)
+            public SimpleDumper(QrackSimulator QrackSim, Action<string> channel) : base(QrackSim)
             {
                 this.Channel = channel;
             }
