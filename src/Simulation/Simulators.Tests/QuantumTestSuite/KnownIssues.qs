@@ -35,7 +35,7 @@ namespace Microsoft.Quantum.Simulation.TestSuite {
     }
     
     
-    operation FracEdgeCasesQSimFail () : Unit {
+    operation FracEdgeCasesQrackSimFail () : Unit {
         
         let rzPlus = RFrac(PauliZ, 1, 0xFFFFFFFFFFFFFFF, _);
         let rxPlus = RFrac(PauliX, 1, 0xFFFFFFFFFFFFFFF, _);

@@ -14,19 +14,19 @@ using Microsoft.Quantum.Simulation.Simulators.Qrack;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-    public partial class QuantumSimulatorTests
+    public partial class QrackSimulatorTests
     {
         [Fact]
-        public void QSimConstructor()
+        public void QrackSimConstructor()
         {
             using (var subject = new QrackSimulator())
             {
-                Assert.Equal("Quantum Simulator", subject.Name);
+                Assert.Equal("Qrack Simulator", subject.Name);
             }
         }
 
         [Fact]
-        public void QSimVerifyPrimitivesCompleteness()
+        public void QrackSimVerifyPrimitivesCompleteness()
         {
             using (var sim = new QrackSimulator())
             {
@@ -56,7 +56,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimX()
+        public void QrackSimX()
         {
             using (var sim = new QrackSimulator(throwOnReleasingQubitsNotInZeroState: false))
             {
@@ -81,7 +81,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimMultithreading()
+        public void QrackSimMultithreading()
         {
             var count = 5;
             var tasks = new Task[count];
@@ -90,10 +90,10 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             {
                 tasks[i] = Task.Run(() =>
                 {
-                    QSimVerifyX();
-                    QSimVerifyY();
-                    QSimVerifyZ();
-                    QSimVerifyExp();
+                    QrackSimVerifyX();
+                    QrackSimVerifyY();
+                    QrackSimVerifyZ();
+                    QrackSimVerifyExp();
                 });
             }
 
@@ -102,7 +102,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
 
         [Fact]
-        public void QSimRandom()
+        public void QrackSimRandom()
         {
             using (var sim = new QrackSimulator())
             {
@@ -114,7 +114,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimAssert()
+        public void QrackSimAssert()
         {
             using (var sim = new QrackSimulator())
             {
@@ -145,7 +145,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
 
         [Fact]
-        public void QSimAssertProb()
+        public void QrackSimAssertProb()
         {
             using (var sim = new QrackSimulator())
             {

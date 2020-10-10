@@ -19,8 +19,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             this.output = output;
         }
 
-        [OperationDriver(TestCasePrefix = "QSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite")]
-        public void QSimTestTarget(TestOperation op)
+        [OperationDriver(TestCasePrefix = "QrackSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite")]
+        public void QrackSimTestTarget(TestOperation op)
         {
             using (var sim = new QrackSimulator( throwOnReleasingQubitsNotInZeroState: true ))
             {
@@ -29,8 +29,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             }
         }
 
-        //[OperationDriver(TestCasePrefix = "QSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite.VeryLong")]
-        private void QSimTestTargetVeryLong(TestOperation op)
+        //[OperationDriver(TestCasePrefix = "QrackSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite.VeryLong")]
+        private void QrackSimTestTargetVeryLong(TestOperation op)
         {
             using (var sim = new QrackSimulator( throwOnReleasingQubitsNotInZeroState: true ))
             {
@@ -39,9 +39,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             }
         }
 
-        //[OperationDriver(TestCasePrefix = "⊗ Fail QSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite", Suffix = "QSimFail")]
-        [OperationDriver(TestCasePrefix = "⊗ Fail QSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite", Suffix = "QSimFail", Skip = "These tests are known to fail" )]
-        public void QSimTestTargetFailures(TestOperation op)
+        //[OperationDriver(TestCasePrefix = "⊗ Fail QrackSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite", Suffix = "QrackSimFail")]
+        [OperationDriver(TestCasePrefix = "⊗ Fail QrackSim:", TestNamespace = "Microsoft.Quantum.Simulation.TestSuite", Suffix = "QrackSimFail", Skip = "These tests are known to fail" )]
+        public void QrackSimTestTargetFailures(TestOperation op)
         {
             using (var sim = new QrackSimulator( throwOnReleasingQubitsNotInZeroState: true ))
             {

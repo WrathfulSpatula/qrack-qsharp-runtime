@@ -14,10 +14,10 @@ using Microsoft.Quantum.Simulation.Simulators.Qrack;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-    public partial class QuantumSimulatorTests
+    public partial class QrackSimulatorTests
     {
-        [OperationDriver(TestCasePrefix ="QSim", TestNamespace = "Microsoft.Quantum.Simulation.Simulators.Tests.Circuits")]
-        public void QSimTestTarget( TestOperation op )
+        [OperationDriver(TestCasePrefix ="QrackSim", TestNamespace = "Microsoft.Quantum.Simulation.Simulators.Tests.Circuits")]
+        public void QrackSimTestTarget( TestOperation op )
         {
             using (var sim = new QrackSimulator(throwOnReleasingQubitsNotInZeroState: true))
             {

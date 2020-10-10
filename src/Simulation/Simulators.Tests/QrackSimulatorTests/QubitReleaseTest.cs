@@ -14,7 +14,7 @@ using Microsoft.Quantum.Simulation.Simulators.Qrack;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-    public partial class QuantumSimulatorTests
+    public partial class QrackSimulatorTests
     {
         //test to check that qubit cannot be released if it is not in zero state
         [Fact]
