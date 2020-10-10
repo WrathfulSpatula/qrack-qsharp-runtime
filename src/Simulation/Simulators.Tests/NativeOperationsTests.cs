@@ -4,10 +4,12 @@
 using System;
 
 using Microsoft.Quantum.Simulation.Core;
-using Microsoft.Quantum.Simulation.Simulators.Qrack;
+
 using NativeOperations;
 
 using Xunit;
+
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
@@ -34,7 +36,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 if (sim is IDisposable dis) dis.Dispose();
             }
 
-            TestOne(new QrackSimulator(), "hello");
+            TestOne(new QrackSimulator(), "Simulator");
         }
 
         [Fact]

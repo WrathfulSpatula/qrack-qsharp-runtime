@@ -7,20 +7,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Quantum.Simulation.Core;
 using Microsoft.Quantum.Simulation.Simulators.Exceptions;
-using Microsoft.Quantum.Simulation.Simulators.Qrack;
 using Microsoft.Quantum.Simulation.Simulators.Tests.Circuits;
 using Xunit;
 
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
+
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-    public partial class QrackSimulatorTests
+    public partial class QuantumSimulatorTests
     {
         [Fact]
         public void QSimConstructor()
         {
             using (var subject = new QrackSimulator())
             {
-                Assert.Equal("Qrack Simulator", subject.Name);
+                Assert.Equal("Quantum Simulator", subject.Name);
             }
         }
 
@@ -63,7 +64,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 var measure = sim.Get<Intrinsic.M>();
                 var set = sim.Get<SetQubit>();
 
-                var ctrlX = x.ControlledBody.AsAction();
+                var ctrlX = x.__ControlledBody__.AsAction();
                 OperationsTestHelper.ctrlTestShell(sim, ctrlX, (enabled, ctrls, q) =>
                 {
                     set.Apply((Result.Zero, q));
@@ -71,7 +72,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                     var expected = Result.Zero;
                     Assert.Equal(expected, result);
 
-                    x.ControlledBody((ctrls, q));
+                    x.__ControlledBody__((ctrls, q));
                     result = measure.Apply(q);
                     expected = (enabled) ? Result.One : Result.Zero;
                     Assert.Equal(expected, result);

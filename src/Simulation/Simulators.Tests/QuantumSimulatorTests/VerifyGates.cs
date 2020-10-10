@@ -4,15 +4,16 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Quantum.Simulation.Core;
-using Microsoft.Quantum.Simulation.Simulators.Qrack;
 using Microsoft.Quantum.Simulation.Simulators.Tests.Circuits;
 using Xunit;
 
 using static System.Math;
 
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
+
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-    public class State
+    public class State 
     {
         public State((double, double) alpha, (double, double) beta)
         {
@@ -29,10 +30,10 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
     }
 
-    public partial class QrackSimulatorTests
+    public partial class QuantumSimulatorTests
     {
         public const int seed = 19740212;
-        public static Random r = new Random(seed);
+        public static System.Random r = new System.Random(seed);
 
         public static double sqrt1_2 = Sqrt(1.0 / 2.0);
 
