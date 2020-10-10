@@ -63,17 +63,17 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             }
         }
 
-        public class QsimDumpMachine<T> : Quantum.Diagnostics.DumpMachine<T>
+        public class QrackSimDumpMachine<T> : Quantum.Diagnostics.DumpMachine<T>
         {
             private QrackSimulator Simulator { get; }
 
 
-            public QsimDumpMachine(QrackSimulator m) : base(m)
+            public QrackSimDumpMachine(QrackSimulator m) : base(m)
             {
                 this.Simulator = m;
             }
 
-            public override Func<T, QVoid> Body => (location) =>
+            public override Func<T, QVoid> __Body__ => (location) =>
             {
                 if (location == null) { throw new ArgumentNullException(nameof(location)); }
 
@@ -91,12 +91,12 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 this.Simulator = m;
             }
 
-            public override Func<(T, IQArray<Qubit>), QVoid> Body => (__in) =>
+            public override Func<(T, IQArray<Qubit>), QVoid> __Body__ => (__in) =>
             {
                 var (location, qubits) = __in;
 
                 if (location == null) { throw new ArgumentNullException(nameof(location)); }
-                Simulator.CheckQubits(qubits);
+                Simulator.CheckAndPreserveQubits(qubits);
 
                 return Simulator.Dump(location, qubits);
             };

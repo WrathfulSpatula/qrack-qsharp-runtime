@@ -24,10 +24,11 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 this.Simulator = m;
             }
 
-            public override Func<Qubit, Result> Body => (q) =>
+            public override Func<Qubit, Result> __Body__ => (q) =>
             {
                 Simulator.CheckQubit(q);
-
+                //setting qubit as measured to allow for release
+                q.IsMeasured = true;
                 return M(Simulator.Id, (uint)q.Id).ToResult();
             };
         }

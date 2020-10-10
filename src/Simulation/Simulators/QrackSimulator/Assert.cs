@@ -6,14 +6,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Quantum.Simulation.Core;
-using Microsoft.Quantum.Simulation.Simulators;
 using static System.Math;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
-        public class QrackSimAssert : Quantum.Intrinsic.Assert
+        public class QrackSimAssert : Microsoft.Quantum.Diagnostics.AssertMeasurement
         {
             [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JointEnsembleProbability")]
             private static extern double JointEnsembleProbability(uint id, uint n, Pauli[] b, uint[] q);
@@ -25,11 +24,11 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 this.Simulator = m;
             }
 
-            public override Func<(IQArray<Pauli>, IQArray<Qubit>, Result, string), QVoid> Body => (_args) =>
+            public override Func<(IQArray<Pauli>, IQArray<Qubit>, Result, string), QVoid> __Body__ => (_args) =>
             {
                 var (paulis, qubits, result, msg) = _args;
 
-                this.Simulator.CheckQubits(qubits);
+                this.Simulator.CheckAndPreserveQubits(qubits);
 
                 if (paulis.Length != qubits.Length)
                 {
@@ -51,11 +50,11 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 return QVoid.Instance;
             };
 
-            public override Func<(IQArray<Pauli>, IQArray<Qubit>, Result, string), QVoid> AdjointBody => (_args) => { return QVoid.Instance; };
+            public override Func<(IQArray<Pauli>, IQArray<Qubit>, Result, string), QVoid> __AdjointBody__ => (_args) => { return QVoid.Instance; };
 
-            public override Func<(IQArray<Qubit>, (IQArray<Pauli>, IQArray<Qubit>, Result, string)), QVoid> ControlledBody => (_args) => { return QVoid.Instance; };
+            public override Func<(IQArray<Qubit>, (IQArray<Pauli>, IQArray<Qubit>, Result, string)), QVoid> __ControlledBody__ => (_args) => { return QVoid.Instance; };
 
-            public override Func<(IQArray<Qubit>, (IQArray<Pauli>, IQArray<Qubit>, Result, string)), QVoid> ControlledAdjointBody => (_args) => { return QVoid.Instance; };
+            public override Func<(IQArray<Qubit>, (IQArray<Pauli>, IQArray<Qubit>, Result, string)), QVoid> __ControlledAdjointBody__ => (_args) => { return QVoid.Instance; };
         }
     }
 }

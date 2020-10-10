@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.12.20082513" />
-    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.12.20082513" />
-    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.12.20082513" />
-    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.12.20082513" />
+    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.12.20100504" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
