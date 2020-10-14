@@ -19,7 +19,7 @@ namespace Microsoft.Quantum.Simulation.TestSuite {
     }
     
     
-    operation ControlledExpWithIPauliTestQSimFail () : Unit {
+    operation ControlledExpWithIPauliTest () : Unit {
         
         let controls = 1;
         let phi = 0.1;
@@ -35,7 +35,7 @@ namespace Microsoft.Quantum.Simulation.TestSuite {
     }
     
     
-    operation FracEdgeCasesQSimFail () : Unit {
+    operation FracEdgeCasesQrackSimFail () : Unit {
         
         let rzPlus = RFrac(PauliZ, 1, 0xFFFFFFFFFFFFFFF, _);
         let rxPlus = RFrac(PauliX, 1, 0xFFFFFFFFFFFFFFF, _);

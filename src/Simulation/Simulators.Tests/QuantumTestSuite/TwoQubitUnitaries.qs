@@ -58,7 +58,7 @@ namespace Microsoft.Quantum.Simulation.TestSuite {
     }
     
     
-    operation ExpTwoQubitTestQSimFail () : Unit {
+    operation ExpTwoQubitTest () : Unit {
         
         
         if (IsFullSimulator()) {
@@ -82,7 +82,7 @@ namespace Microsoft.Quantum.Simulation.TestSuite {
     }
     
     
-    operation ControlledOneQubitOperationsTwoQubitTestQSimFail () : Unit {
+    operation ControlledOneQubitOperationsTwoQubitTest () : Unit {
         for (test in OneQubitTestList()) {
             let shouldExecute =
                 IsFullSimulator() or

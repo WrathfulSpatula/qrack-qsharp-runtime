@@ -6,6 +6,8 @@ using Microsoft.Quantum.Simulation.Core;
 using Microsoft.Quantum.Simulation.Simulators;
 using Xunit;
 
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
+
 namespace NativeOperations
 {
     // An intrinsic operation can specify its built-in Native implementation:
@@ -20,7 +22,7 @@ namespace NativeOperations
         {
             public Native(IOperationFactory m) : base(m) { }
 
-            public override Func<QVoid, String> Body => (arg) =>
+            public override Func<QVoid, String> __Body__ => (arg) =>
             {
                 return RESULT;
             };
@@ -34,18 +36,18 @@ namespace NativeOperations
         {
             public Native(IOperationFactory m) : base(m) { }
 
-            public override Func<QVoid, String> Body => (arg) =>
+            public override Func<QVoid, String> __Body__ => (arg) =>
             {
-                if (this.Factory is QuantumSimulator)
+                if (this.__Factory__ is QrackSimulator)
                 {
                     return "Simulator";
                 }
-                else if (this.Factory is ToffoliSimulator)
+                else if (this.__Factory__ is ToffoliSimulator)
                 {
                     return "Toffoli";
                 }
 
-                return base.Body(arg);
+                return base.__Body__(arg);
             };
         }
     }
@@ -58,7 +60,7 @@ namespace NativeOperations
         {
             public Other1(IOperationFactory m) : base(m) { }
 
-            public override Func<__T__, string> Body => throw new NotImplementedException();
+            public override Func<__T__, string> __Body__ => throw new NotImplementedException();
         }
 
         // This one should not be used, it has the same number of Type parameters,
@@ -70,7 +72,7 @@ namespace NativeOperations
         {
             public Emulation(IOperationFactory m) : base(m) { }
 
-            public override Func<__T__, string> Body => (arg) =>
+            public override Func<__T__, string> __Body__ => (arg) =>
             {
                 if (arg is string s)
                 {
@@ -92,7 +94,7 @@ namespace NativeOperations
         {
             public Emulation(IOperationFactory m) : base(m) { }
 
-            public override Func<__T__, __T__> Body => (arg) =>
+            public override Func<__T__, __T__> __Body__ => (arg) =>
             {
                 if (arg is string s)
                 {
@@ -100,7 +102,7 @@ namespace NativeOperations
                 }
                 else
                 {
-                    return base.Body(arg);
+                    return base.__Body__(arg);
                 }
             };
         }

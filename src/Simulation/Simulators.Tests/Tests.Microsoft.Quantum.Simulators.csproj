@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IncludeQsharpCorePackages>false</IncludeQsharpCorePackages>
+    <CsharpGeneration>false</CsharpGeneration><!-- we will provide our own -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="TestProjects\**" />
+    <EmbeddedResource Remove="TestProjects\**" />
+    <QsharpCompile Remove="TestProjects\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.Development.Kit" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.Xunit" Version="0.12.20100504" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Simulators\Microsoft.Quantum.Simulation.Simulators.Qrack.csproj" />
+  </ItemGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <PropertyGroup>
+      <_ExeDir>$(MSBuildThisFileDirectory)TestProjects\QsharpExe\built\</_ExeDir>
+      <_TargetedExeDir>$(MSBuildThisFileDirectory)TestProjects\TargetedExe\built\</_TargetedExeDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <_ExeFiles Include="$(_ExeDir)*" />
+      <_TargetedExeFiles Include="$(_TargetedExeDir)*" />
+    </ItemGroup>
+    <MakeDir Directories="$(OutputPath)TestExe" />
+    <MakeDir Directories="$(OutputPath)TestTargetedExe" />
+    <Copy SourceFiles="@(_ExeFiles)" DestinationFolder="$(OutputPath)TestExe" ContinueOnError="false" />
+    <Copy SourceFiles="@(_TargetedExeFiles)" DestinationFolder="$(OutputPath)TestTargetedExe" ContinueOnError="false" />
+  </Target>
+
+</Project>
+
+

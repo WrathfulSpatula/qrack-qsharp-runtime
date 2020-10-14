@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
+#nullable enable
 
 using Xunit;
 
@@ -13,6 +15,7 @@ using Microsoft.Quantum.Simulation.Simulators.Exceptions;
 using Xunit.Abstractions;
 using System.Text;
 using System.Collections.Generic;
+
 using Microsoft.Quantum.Simulation.Simulators.Qrack;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
@@ -30,33 +33,37 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void AllocateQubit2Test()
         {
-            using (var sim = new QrackSimulator())
+            using var sim = new QrackSimulator();
+            try
             {
-                try
-                {
-                    QVoid res = AllocateQubit2.Run(sim).Result;
-                }
-                catch (AggregateException ex)
-                {
-                    Assert.True(ex.InnerException is ExecutionFailException);
+                IgnorableAssert.Disable();
+                QVoid res = sim.Execute<AllocateQubit2, QVoid, QVoid>(QVoid.Instance);
+            }
+            catch (ExecutionFailException)
+            {
+                var stackFrames = sim.CallStack;
 
-                    StackFrame[] stackFrames = sim.CallStack;
+                // Make sure that the call stack isn't null before proceeding.
+                Assert.NotNull(stackFrames);
 
-                    // The following assumes that Assert is on Q# stack.
-                    Assert.Equal(2, stackFrames.Length);
+                // The following assumes that Assert is on Q# stack.
+                Assert.Equal(2, stackFrames!.Length);
 
-                    Assert.Equal("Microsoft.Quantum.Intrinsic.Assert", stackFrames[0].Callable.FullName);
-                    Assert.Equal(namespacePrefix + "AllocateQubit2", stackFrames[1].Callable.FullName);
+                Assert.Equal("Microsoft.Quantum.Diagnostics.AssertMeasurement", stackFrames[0].Callable.FullName);
+                Assert.Equal(namespacePrefix + "AllocateQubit2", stackFrames[1].Callable.FullName);
 
-                    Assert.Equal(OperationFunctor.Body, stackFrames[0].Callable.Variant);
-                    Assert.Equal(OperationFunctor.Body, stackFrames[1].Callable.Variant);
+                Assert.Equal(OperationFunctor.Body, stackFrames[0].Callable.Variant);
+                Assert.Equal(OperationFunctor.Body, stackFrames[1].Callable.Variant);
 
-                    Assert.Equal(94, stackFrames[1].FailedLineNumber);
-                }
+                Assert.Equal(94, stackFrames[1].FailedLineNumber);
+            }
+            finally
+            {
+                IgnorableAssert.Enable();
             }
         }
 
-        //[Fact]
+        [Fact(Skip = "Not supported by QrackSimulator")]
         public void AlwaysFail4Test()
         {
             using (var sim = new QrackSimulator())

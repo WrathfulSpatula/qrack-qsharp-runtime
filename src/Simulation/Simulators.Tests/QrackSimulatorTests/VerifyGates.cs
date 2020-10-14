@@ -4,15 +4,16 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Quantum.Simulation.Core;
-using Microsoft.Quantum.Simulation.Simulators.Qrack;
 using Microsoft.Quantum.Simulation.Simulators.Tests.Circuits;
 using Xunit;
 
 using static System.Math;
 
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
+
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-    public class State
+    public class State 
     {
         public State((double, double) alpha, (double, double) beta)
         {
@@ -32,7 +33,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
     public partial class QrackSimulatorTests
     {
         public const int seed = 19740212;
-        public static Random r = new Random(seed);
+        public static System.Random r = new System.Random(seed);
 
         public static double sqrt1_2 = Sqrt(1.0 / 2.0);
 
@@ -90,7 +91,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyH()
+        public void QrackSimVerifyH()
         {
             using (var sim = new QrackSimulator())
             {
@@ -106,7 +107,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyX()
+        public void QrackSimVerifyX()
         {
             using (var sim = new QrackSimulator())
             {
@@ -123,7 +124,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyY()
+        public void QrackSimVerifyY()
         {
             using (var sim = new QrackSimulator())
             {
@@ -140,7 +141,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyZ()
+        public void QrackSimVerifyZ()
         {
             using (var sim = new QrackSimulator())
             {
@@ -157,7 +158,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyS()
+        public void QrackSimVerifyS()
         {
             using (var sim = new QrackSimulator())
             {
@@ -174,7 +175,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyT()
+        public void QrackSimVerifyT()
         {
             using (var sim = new QrackSimulator())
             {
@@ -191,7 +192,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyR1()
+        public void QrackSimVerifyR1()
         {
             using (var sim = new QrackSimulator())
             {
@@ -271,7 +272,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyRx()
+        public void QrackSimVerifyRx()
         {
             var angle = 2 * PI * r.NextDouble();
             Func<Qubit, (double, Qubit)> mapper = (q)
@@ -287,7 +288,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyRy()
+        public void QrackSimVerifyRy()
         {
             var angle = 2 * PI * r.NextDouble();
             Func<Qubit, (double, Qubit)> mapper = (q)
@@ -303,7 +304,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyRz()
+        public void QrackSimVerifyRz()
         {
             var angle = 2 * PI * r.NextDouble();
             Func<Qubit, (double, Qubit)> mapper = (q)
@@ -319,7 +320,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyR()
+        public void QrackSimVerifyR()
         {
             var angle = 2 * PI * r.NextDouble();
             Func<Qubit, (Pauli, double, Qubit)> mapper = (q)
@@ -338,7 +339,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyRFrac()
+        public void QrackSimVerifyRFrac()
         {
             using (var sim = new QrackSimulator())
             {
@@ -381,31 +382,31 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyExp()
+        public void QrackSimVerifyExp()
         {
             VerifyExp(Pauli.PauliI);
         }
 
         [Fact]
-        public void QSimVerifyExpY()
+        public void QrackSimVerifyExpY()
         {
             VerifyExp(Pauli.PauliY);
         }
 
         [Fact]
-        public void QSimVerifyExpZ()
+        public void QrackSimVerifyExpZ()
         {
             VerifyExp(Pauli.PauliZ);
         }
 
         [Fact]
-        public void QSimVerifyExpX()
+        public void QrackSimVerifyExpX()
         {
             VerifyExp(Pauli.PauliX);
         }
 
         [Fact]
-        public void QSimVerifyExpFrac()
+        public void QrackSimVerifyExpFrac()
         {
             using (var sim = new QrackSimulator())
             {
@@ -429,7 +430,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimMeasure()
+        public void QrackSimMeasure()
         {
             using (var sim = new QrackSimulator())
             {
@@ -439,7 +440,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimM()
+        public void QrackSimM()
         {
             using (var sim = new QrackSimulator())
             {

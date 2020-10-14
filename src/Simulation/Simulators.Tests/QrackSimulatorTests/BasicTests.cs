@@ -7,16 +7,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Quantum.Simulation.Core;
 using Microsoft.Quantum.Simulation.Simulators.Exceptions;
-using Microsoft.Quantum.Simulation.Simulators.Qrack;
 using Microsoft.Quantum.Simulation.Simulators.Tests.Circuits;
 using Xunit;
+
+using Microsoft.Quantum.Simulation.Simulators.Qrack;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
     public partial class QrackSimulatorTests
     {
         [Fact]
-        public void QSimConstructor()
+        public void QrackSimConstructor()
         {
             using (var subject = new QrackSimulator())
             {
@@ -25,7 +26,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimVerifyPrimitivesCompleteness()
+        public void QrackSimVerifyPrimitivesCompleteness()
         {
             using (var sim = new QrackSimulator())
             {
@@ -55,7 +56,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimX()
+        public void QrackSimX()
         {
             using (var sim = new QrackSimulator(throwOnReleasingQubitsNotInZeroState: false))
             {
@@ -63,7 +64,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 var measure = sim.Get<Intrinsic.M>();
                 var set = sim.Get<SetQubit>();
 
-                var ctrlX = x.ControlledBody.AsAction();
+                var ctrlX = x.__ControlledBody__.AsAction();
                 OperationsTestHelper.ctrlTestShell(sim, ctrlX, (enabled, ctrls, q) =>
                 {
                     set.Apply((Result.Zero, q));
@@ -71,7 +72,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                     var expected = Result.Zero;
                     Assert.Equal(expected, result);
 
-                    x.ControlledBody((ctrls, q));
+                    x.__ControlledBody__((ctrls, q));
                     result = measure.Apply(q);
                     expected = (enabled) ? Result.One : Result.Zero;
                     Assert.Equal(expected, result);
@@ -80,7 +81,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimMultithreading()
+        public void QrackSimMultithreading()
         {
             var count = 5;
             var tasks = new Task[count];
@@ -89,10 +90,10 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             {
                 tasks[i] = Task.Run(() =>
                 {
-                    QSimVerifyX();
-                    QSimVerifyY();
-                    QSimVerifyZ();
-                    QSimVerifyExp();
+                    QrackSimVerifyX();
+                    QrackSimVerifyY();
+                    QrackSimVerifyZ();
+                    QrackSimVerifyExp();
                 });
             }
 
@@ -101,7 +102,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
 
         [Fact]
-        public void QSimRandom()
+        public void QrackSimRandom()
         {
             using (var sim = new QrackSimulator())
             {
@@ -113,7 +114,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
-        public void QSimAssert()
+        public void QrackSimAssert()
         {
             using (var sim = new QrackSimulator())
             {
@@ -144,7 +145,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
 
 
         [Fact]
-        public void QSimAssertProb()
+        public void QrackSimAssertProb()
         {
             using (var sim = new QrackSimulator())
             {
