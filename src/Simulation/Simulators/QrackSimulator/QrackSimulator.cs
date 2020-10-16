@@ -102,6 +102,16 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
         }
 
         /// <summary>
+        ///     Makes sure the target qubit of an operation is valid. In particular it checks that the qubit instance is not null.
+        ///     Also sets the isMeasured flag to false for each qubit
+        /// </summary>
+        void CheckQubit(Qubit q1, Qubit q2)
+        {
+            CheckQubit(q1);
+            CheckQubit(q2);
+        }
+
+        /// <summary>
         ///     Makes sure all qubits are valid as parameter of an intrinsic quantum operation. In particular it checks that 
         ///         - none of the qubits are null
         ///         - there are no duplicated qubits
@@ -113,6 +123,35 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 
             CheckQubitInUse(q1, used);
             q1.IsMeasured = false;
+
+            if (ctrls != null && ctrls.Length > 0)
+            {
+                foreach (var q in ctrls)
+                {
+                    CheckQubitInUse(q, used);
+                    //setting qubit as not measured to not allow release in case of gate operation on qubit
+                    q.IsMeasured = false;
+                }
+            }
+
+            return used;
+        }
+
+        /// <summary>
+        ///     Makes sure all qubits are valid as parameter of an intrinsic quantum operation. In particular it checks that 
+        ///         - none of the qubits are null
+        ///         - there are no duplicated qubits
+        ///     Also sets the isMeasured flag to false for each qubit
+        /// </summary>
+        bool[] CheckQubits(IQArray<Qubit> ctrls, Qubit q1, Qubit q2)
+        {
+            bool[] used = new bool[((QrackSimQubitManager)QubitManager).MaxId];
+
+            CheckQubitInUse(q1, used);
+            q1.IsMeasured = false;
+
+            CheckQubitInUse(q2, used);
+            q2.IsMeasured = false;
 
             if (ctrls != null && ctrls.Length > 0)
             {
