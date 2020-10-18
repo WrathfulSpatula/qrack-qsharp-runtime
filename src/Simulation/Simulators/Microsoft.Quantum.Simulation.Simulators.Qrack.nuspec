@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/vm6502q/qrack</projectUrl>
+    <iconUrl>https://avatars0.githubusercontent.com/u/37188146?s=200&v=4</iconUrl>
+    <description>vm6502q/qrack simulator plugin for Q#</description>
+    <releaseNotes>(Initial release)</releaseNotes>
+    <copyright>Copyright (c) Daniel Strano and the Qrack contributors 2017-2020. All rights reserved.</copyright>
+    <tags>quantum quantum-computing qsharp gpu</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard3.1">
+        <dependency id="Microsoft.Quantum.CsharpGeneration" version="0.12.20100504" />
+		<dependency id="Microsoft.Quantum.QSharp.Core" version="0.12.20100504" />
+		<dependency id="Microsoft.Quantum.Runtime.Core" version="0.12.20100504" />
+		<dependency id="Microsoft.Quantum.Simulators" version="0.12.20100504" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
