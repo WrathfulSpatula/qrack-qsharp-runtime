@@ -59,13 +59,13 @@
     <QrackSimDll Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(QrackSimDllWindows)</QrackSimDll>
   </PropertyGroup>
   
-  <ItemGroup>
+  <!--<ItemGroup>
     <None Include="$(QrackSimDll)" >
       <Link>qrack_pinvoke.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Visible>false</Visible>
     </None>
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <None Include="..\Native\win10\**\*">

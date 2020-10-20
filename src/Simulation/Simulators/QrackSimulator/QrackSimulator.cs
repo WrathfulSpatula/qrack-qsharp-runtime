@@ -16,7 +16,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
     public partial class QrackSimulator : SimulatorBase, IDisposable
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern IntPtr AddDllDirectory(string lpPathName);
+        public static extern bool SetDllDirectory(string lpPathName);
 
         public const string QRACKSIM_DLL_NAME = "qrack_pinvoke.dll";
 
@@ -49,7 +49,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             (int?)randomNumberGeneratorSeed
         )
         {
-            AddDllDirectory("%programfiles(x86)%/Qrack/bin");
+            string dllPath = System.Environment.GetEnvironmentVariable("programfiles(x86)") + "\\Qrack\\bin";
+            SetDllDirectory(dllPath);
 
             Id = Init();
             // Make sure that the same seed used by the built-in System.Random
