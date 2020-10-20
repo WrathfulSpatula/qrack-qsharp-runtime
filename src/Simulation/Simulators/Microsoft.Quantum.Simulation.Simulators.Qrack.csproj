@@ -1,8 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Platforms>AnyCPU;x64</Platforms>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <IncludeQsharpCorePackages>true</IncludeQsharpCorePackages>
+    <CsharpGeneration>true</CsharpGeneration>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LanguageVersion>8.0</LanguageVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Platforms>x64</Platforms>
     <Version>5.4.0</Version>
     <Authors>Daniel Strano and the Qrack contributors</Authors>
     <Company>vm6502q</Company>
@@ -22,31 +32,57 @@
     <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.12.20100504" />
     <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.12.20100504" />
   </ItemGroup>
+  
+  <Target Name="UnescapeDefineConstants" BeforeTargets="CoreCompile">
+    <CreateProperty Value="$([MSBuild]::Unescape($(DefineConstants)))">
+      <Output TaskParameter="Value" PropertyName="DefineConstants"/>
+    </CreateProperty>
+  </Target>
+  
+  <PropertyGroup>
+    <!-- Disable documentation not-present warning https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/cs1591 -->
+    <NoWarn>1591</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb;.xml</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(QrackSimDll)' == ''">
+    <!--<QrackSimDllMac>$([MSBuild]::NormalizePath($(NativeBuildPath)/libMicrosoft.Quantum.Simulator.Runtime.dylib))</QrackSimDllMac>
+    <QrackSimDllLinux>$([MSBuild]::NormalizePath($(NativeBuildPath)/libMicrosoft.Quantum.Simulator.Runtime.so))</QrackSimDllLinux>-->
+    <QrackSimDllWindows>qrack_pinvoke.dll</QrackSimDllWindows>
+    <!--<QrackSimDll Condition="$([MSBuild]::IsOsPlatform('OSX'))">$(QrackSimDllMac)</QrackSimDll>
+    <QrackSimDll Condition="$([MSBuild]::IsOsPlatform('Linux'))">$(QrackSimDllLinux)</QrackSimDll>-->
+    <QrackSimDll Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(QrackSimDllWindows)</QrackSimDll>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="$(QrackSimDll)" >
+      <Link>qrack_pinvoke.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
-    <None Update="lib\qrack.lib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="..\Native\win10\**\*">
+      <Link>runtimes\win-x64\native\%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <PackageCopyToOutput>True</PackageCopyToOutput>
     </None>
-    <None Update="lib\qrack_cl_precompile.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="lib\qrack_pinvoke.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="lib\qrack_pinvoke.exp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="lib\qrack_pinvoke.lib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="lib\qrack_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <DefineConstants>_WINDOWS</DefineConstants>
-  </PropertyGroup>
 
 </Project>

@@ -15,11 +15,10 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator : SimulatorBase, IDisposable
     {
-#if _WINDOWS
-        public const string QRACKSIM_DLL_NAME = @"lib\\qrack_pinvoke.dll";
-#else
-        public const string QRACKSIM_DLL_NAME = @"lib/libqrack_pinvoke.so.3.1";
-#endif
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern IntPtr AddDllDirectory(string lpPathName);
+
+        public const string QRACKSIM_DLL_NAME = "qrack_pinvoke.dll";
 
         private delegate void IdsCallback(uint id);
 
@@ -50,6 +49,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             (int?)randomNumberGeneratorSeed
         )
         {
+            AddDllDirectory("%programfiles(x86)%/Qrack/bin");
+
             Id = Init();
             // Make sure that the same seed used by the built-in System.Random
             // instance is also used by the native simulator itself.
