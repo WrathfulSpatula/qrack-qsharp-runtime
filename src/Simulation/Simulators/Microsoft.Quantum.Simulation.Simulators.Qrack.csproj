@@ -49,33 +49,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb;.xml</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(QrackSimDll)' == ''">
-    <!--<QrackSimDllMac>$([MSBuild]::NormalizePath($(NativeBuildPath)/libMicrosoft.Quantum.Simulator.Runtime.dylib))</QrackSimDllMac>
-    <QrackSimDllLinux>$([MSBuild]::NormalizePath($(NativeBuildPath)/libMicrosoft.Quantum.Simulator.Runtime.so))</QrackSimDllLinux>-->
-    <QrackSimDllWindows>qrack_pinvoke.dll</QrackSimDllWindows>
-    <!--<QrackSimDll Condition="$([MSBuild]::IsOsPlatform('OSX'))">$(QrackSimDllMac)</QrackSimDll>
-    <QrackSimDll Condition="$([MSBuild]::IsOsPlatform('Linux'))">$(QrackSimDllLinux)</QrackSimDll>-->
-    <QrackSimDll Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(QrackSimDllWindows)</QrackSimDll>
-  </PropertyGroup>
-  
-  <!--<ItemGroup>
-    <None Include="$(QrackSimDll)" >
-      <Link>qrack_pinvoke.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Visible>false</Visible>
-    </None>
-  </ItemGroup>-->
-
-  <ItemGroup>
-    <None Include="..\Native\win10\**\*">
-      <Link>runtimes\win-x64\native\%(RecursiveDir)%(FileName)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-      <PackageCopyToOutput>True</PackageCopyToOutput>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="lib\qrack_logo.png">

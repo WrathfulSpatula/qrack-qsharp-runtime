@@ -21,11 +21,5 @@
 		<dependency id="Microsoft.Quantum.Simulators" version="0.12.20100504" />
       </group>
     </dependencies>
-	
-	<files>
-	  <file src="..\Native\osx\*" target="runtimes\osx-x64\native" />
-	  <file src="..\Native\linux\*" target="runtimes\linux-x64\native" />
-	  <file src="..\Native\win10\*" target="runtimes\win-x64\native" />
-	</files>
   </metadata>
 </package>
