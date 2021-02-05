@@ -11,26 +11,14 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
-        public class QrackSimM : Quantum.Intrinsic.M
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "M")]
+        private static extern uint M(uint id, uint q);
+        public virtual Result M__Body(Qubit target)
         {
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "M")]
-            private static extern uint M(uint id, uint q);
-
-            private QrackSimulator Simulator { get; }
-
-
-            public QrackSimM(QrackSimulator m) : base(m)
-            {
-                this.Simulator = m;
-            }
-
-            public override Func<Qubit, Result> __Body__ => (q) =>
-            {
-                Simulator.CheckQubit(q);
-                //setting qubit as measured to allow for release
-                q.IsMeasured = true;
-                return M(Simulator.Id, (uint)q.Id).ToResult();
-            };
+            this.CheckQubit(target);
+            //setting qubit as measured to allow for release
+            target.IsMeasured = true;
+            return M(this.Id, (uint)target.Id).ToResult();
         }
     }
 }

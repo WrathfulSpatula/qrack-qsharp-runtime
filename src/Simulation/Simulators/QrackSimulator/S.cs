@@ -9,71 +9,48 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
-        public class QrackSimS : Intrinsic.S
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "S")]
+        private static extern void S(uint id, uint qubit);
+
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "AdjS")]
+        private static extern void AdjS(uint id, uint qubit);
+
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCS")]
+        private static extern void MCS(uint id, uint count, uint[] ctrls, uint qubit);
+
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCAdjS")]
+        private static extern void MCAdjS(uint id, uint count, uint[] ctrls, uint qubit);
+
+        public virtual void S__Body(Qubit target)
         {
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "S")]
-            private static extern void S(uint id, uint qubit);
+            this.CheckQubit(target);
 
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "AdjS")]
-            private static extern void AdjS(uint id, uint qubit);
+            S(this.Id, (uint)target.Id);
+        }
 
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCS")]
-            private static extern void MCS(uint id, uint count, uint[] ctrls, uint qubit);
+        public virtual void S__ControlledBody(IQArray<Qubit> controls, Qubit target)
+        {
+            this.CheckQubits(controls, target);
 
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCAdjS")]
-            private static extern void MCAdjS(uint id, uint count, uint[] ctrls, uint qubit);
+            SafeControlled(controls,
+                () => S__Body(target),
+                (count, ids) => MCS(this.Id, count, ids, (uint)target.Id));
+        }
 
-            private QrackSimulator Simulator { get; }
+        public virtual void S__AdjointBody(Qubit target)
+        {
+            this.CheckQubit(target);
 
+            AdjS(this.Id, (uint)target.Id);
+        }
 
-            public QrackSimS(QrackSimulator m) : base(m)
-            {
-                this.Simulator = m;
-            }
+        public virtual void S__ControlledAdjointBody(IQArray<Qubit> controls, Qubit target)
+        {
+            this.CheckQubits(controls, target);
 
-            public override Func<Qubit, QVoid> __Body__ => (q1) =>
-            {
-                Simulator.CheckQubit(q1);
-
-                S(Simulator.Id, (uint)q1.Id);
-
-                return QVoid.Instance;
-            };
-
-            public override Func<(IQArray<Qubit>, Qubit), QVoid> __ControlledBody__ => (_args) =>
-            {
-                (IQArray<Qubit> ctrls, Qubit q1) = _args;
-
-                Simulator.CheckQubits(ctrls, q1);
-
-                SafeControlled(ctrls,
-                    () => this.Apply(q1),
-                    (count, ids) => MCS(Simulator.Id, count, ids, (uint)q1.Id));
-
-                return QVoid.Instance;
-            };
-
-            public override Func<Qubit, QVoid> __AdjointBody__ => (q1) =>
-            {
-                Simulator.CheckQubit(q1);
-
-                AdjS(Simulator.Id, (uint)q1.Id);
-
-                return QVoid.Instance;
-            };
-
-            public override Func<(IQArray<Qubit>, Qubit), QVoid> __ControlledAdjointBody__ => (_args) =>
-            {
-                (IQArray<Qubit> ctrls, Qubit q1) = _args;
-
-                Simulator.CheckQubits(ctrls, q1);
-
-                SafeControlled(ctrls,
-                    () => this.__AdjointBody__(q1),
-                    (count, ids) => MCAdjS(Simulator.Id, count, ids, (uint)q1.Id));
-
-                return QVoid.Instance;
-            };
+            SafeControlled(controls,
+                () => S__AdjointBody(target),
+                (count, ids) => MCAdjS(this.Id, count, ids, (uint)target.Id));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             public override Func<IQArray<double>, Int64> __Body__ => (p) =>
             {
                 return random_choice(this.SimulatorId, p.Length, p.ToArray());
-            };            
+            };
         }
     }
 }

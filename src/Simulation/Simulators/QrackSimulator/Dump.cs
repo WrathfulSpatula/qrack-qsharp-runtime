@@ -67,7 +67,6 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
         {
             private QrackSimulator Simulator { get; }
 
-
             public QrackSimDumpMachine(QrackSimulator m) : base(m)
             {
                 this.Simulator = m;

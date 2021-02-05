@@ -2,11 +2,9 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Linq;
 using Microsoft.Quantum.Simulation.Core;
 using Microsoft.Quantum.Simulation.Common;
 using System.Runtime.InteropServices;
-using System.Threading;
 using Microsoft.Quantum.Simulation.Simulators.Exceptions;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -45,7 +43,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             UInt32? randomNumberGeneratorSeed = null,
             bool disableBorrowing = false)
         : base(
-            new QrackSimQubitManager(throwOnReleasingQubitsNotInZeroState, disableBorrowing : disableBorrowing),
+            new QrackSimQubitManager(throwOnReleasingQubitsNotInZeroState, disableBorrowing: disableBorrowing),
             (int?)randomNumberGeneratorSeed
         )
         {
@@ -245,7 +243,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             {
                 var ids = new List<uint>();
                 sim_QubitsIds(this.Id, ids.Add);
-                Debug.Assert(ids.Count == this.QubitManager.GetAllocatedQubitsCount());
+                Debug.Assert(ids.Count == this.QubitManager.AllocatedQubitsCount);
                 return ids.ToArray();
             }
         }
@@ -258,7 +256,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             }
             else
             {
-                uint count = (uint)ctrls.Length;                
+                uint count = (uint)ctrls.Length;
                 controlledAction(count, ctrls.GetIds());
             }
         }
