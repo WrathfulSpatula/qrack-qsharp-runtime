@@ -6,46 +6,35 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
-        public class QrackSimSwap : Intrinsic.SWAP
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SWAP")]
+        private static extern uint SWAP(uint id, uint q1, uint q2);
+
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CSWAP")]
+        private static extern uint CSWAP(uint id, uint count, uint[] ctrls, uint q1, uint q2);
+
+        public virtual void SWAP__Body(Qubit target1, Qubit target2)
         {
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SWAP")]
-            private static extern uint SWAP(uint id, uint q1, uint q2);
+            var ctrls1 = new QArray<Qubit>(target1);
+            var ctrls2 = new QArray<Qubit>(target2);
+            this.CheckQubits(ctrls1, ctrls2);
 
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "CSWAP")]
-            private static extern uint CSWAP(uint id, uint count, uint[] ctrls, uint q1, uint q2);
+            SWAP(this.Id, (uint)target1.Id, (uint)target2.Id);
+        }
 
-            private QrackSimulator Simulator { get; }
-
-
-            public QrackSimSwap(QrackSimulator m) : base(m)
+        public virtual void SWAP__ControlledBody(IQArray<Qubit> controls, Qubit target1, Qubit target2)
+        {
+            if ((controls == null) || (controls.Count == 0))
             {
-                this.Simulator = m;
+                SWAP__Body(target1, target2);
             }
-
-            public override Func<(Qubit, Qubit), QVoid> __Body__ => (args) =>
+            else
             {
-                var (q1, q2) = args;
+                var ctrls_1 = QArray<Qubit>.Add(controls, new QArray<Qubit>(target1));
+                var ctrls_2 = QArray<Qubit>.Add(controls, new QArray<Qubit>(target2));
+                this.CheckQubits(ctrls_1, ctrls_2);
 
-                Simulator.CheckQubit(q1);
-
-                SWAP(Simulator.Id, (uint)q1.Id, (uint)q2.Id);
-
-                return QVoid.Instance;
-            };
-
-
-            public override Func<(IQArray<Qubit>, (Qubit, Qubit)), QVoid> __ControlledBody__ => (args) =>
-            {
-                var (ctrls, (q1, q2)) = args;
-
-                Simulator.CheckQubits(ctrls, q1, q2);
-
-                SafeControlled(ctrls,
-                    () => this.Apply((q1, q2)),
-                    (count, ids) => CSWAP(Simulator.Id, count, ids, (uint)q1.Id, (uint)q2.Id));
-
-                return QVoid.Instance;
-            };
+                CSWAP(this.Id, (uint)controls.Length, controls.GetIds(), (uint)target1.Id, (uint)target2.Id);
+            }
         }
     }
 }

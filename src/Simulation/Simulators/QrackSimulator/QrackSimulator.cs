@@ -8,10 +8,11 @@ using System.Runtime.InteropServices;
 using Microsoft.Quantum.Simulation.Simulators.Exceptions;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.Quantum.Intrinsic.Interfaces;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
-    public partial class QrackSimulator : SimulatorBase, IDisposable
+    public partial class QrackSimulator : SimulatorBase, IQSharpCore, IType1Core, IType2Core, IDisposable
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern bool SetDllDirectory(string lpPathName);
