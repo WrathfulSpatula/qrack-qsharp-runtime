@@ -20,5 +20,20 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             target.IsMeasured = true;
             return M(this.Id, (uint)target.Id).ToResult();
         }
+
+        public class QrackSimM : Intrinsic.M
+        {
+            private QrackSimulator Simulator { get; }
+
+            public QrackSimM(QrackSimulator m) : base(m)
+            {
+                this.Simulator = m;
+            }
+
+            public override Func<Qubit, Result> __Body__ => (q1) =>
+            {
+                return Simulator.M__Body(q1);
+            };
+        }
     }
 }

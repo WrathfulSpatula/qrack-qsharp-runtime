@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Simulators\Microsoft.Quantum.Simulation.Simulators.Qrack.csproj" />
+    <ProjectReference Include="..\TargetDefinitions\Interfaces\Microsoft.Quantum.Targets.Interfaces.csproj" />
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

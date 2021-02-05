@@ -30,5 +30,32 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 () => H__Body(target),
                 (count, ids) => MCH(this.Id, count, ids, (uint)target.Id));
         }
+
+        public class QrackSimH : Intrinsic.H
+        {
+            private QrackSimulator Simulator { get; }
+
+            public QrackSimH(QrackSimulator m) : base(m)
+            {
+                this.Simulator = m;
+            }
+
+            public override Func<Qubit, QVoid> __Body__ => (q1) =>
+            {
+                Simulator.H__Body(q1);
+
+                return QVoid.Instance;
+            };
+
+
+            public override Func<(IQArray<Qubit>, Qubit), QVoid> __ControlledBody__ => (args) =>
+            {
+                var (controls, target) = args;
+
+                Simulator.H__ControlledBody(controls, target);
+
+                return QVoid.Instance;
+            };
+        }
     }
 }

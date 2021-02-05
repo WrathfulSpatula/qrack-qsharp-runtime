@@ -53,5 +53,52 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
         {
             Exp__ControlledBody(controls, paulis, -angle, targets);
         }
+
+        public class QrackSimExp : Intrinsic.Exp
+        {
+            private QrackSimulator Simulator { get; }
+
+            public QrackSimExp(QrackSimulator m) : base(m)
+            {
+                this.Simulator = m;
+            }
+
+            public override Func<(IQArray<Pauli>, double, IQArray<Qubit>), QVoid> __Body__ => (_args) =>
+            {
+                var (paulis, angle, targets) = _args;
+
+                Simulator.Exp__Body(paulis, angle, targets);
+
+                return QVoid.Instance;
+            };
+
+            public override Func<(IQArray<Pauli>, double, IQArray<Qubit>), QVoid> __AdjointBody__ => (_args) =>
+            {
+                var (paulis, angle, targets) = _args;
+
+                Simulator.Exp__AdjointBody(paulis, angle, targets);
+
+                return QVoid.Instance;
+            };
+
+            public override Func<(IQArray<Qubit>, (IQArray<Pauli>, double, IQArray<Qubit>)), QVoid> __ControlledBody__ => (_args) =>
+            {
+                var (ctrls, (paulis, angle, targets)) = _args;
+
+                Simulator.Exp__ControlledBody(ctrls, paulis, angle, targets);
+
+                return QVoid.Instance;
+            };
+
+
+            public override Func<(IQArray<Qubit>, (IQArray<Pauli>, double, IQArray<Qubit>)), QVoid> __ControlledAdjointBody__ => (_args) =>
+            {
+                var (ctrls, (paulis, angle, targets)) = _args;
+
+                Simulator.Exp__ControlledAdjointBody(ctrls, paulis, angle, targets);
+
+                return QVoid.Instance;
+            };
+        }
     }
 }

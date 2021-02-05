@@ -26,5 +26,22 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             }
             return Measure(this.Id, (uint)paulis.Length, paulis.ToArray(), targets.GetIds()).ToResult();
         }
+
+        public class QrackSimMeasure : Intrinsic.Measure
+        {
+            private QrackSimulator Simulator { get; }
+
+            public QrackSimMeasure(QrackSimulator m) : base(m)
+            {
+                this.Simulator = m;
+            }
+
+            public override Func<(IQArray<Pauli>, IQArray<Qubit>), Result> __Body__ => (_args) =>
+            {
+                var (paulis, targets) = _args;
+
+                return Simulator.Measure__Body(paulis, targets);
+            };
+        }
     }
 }

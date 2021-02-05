@@ -52,5 +52,48 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 () => T__AdjointBody(target),
                 (count, ids) => MCAdjT(this.Id, count, ids, (uint)target.Id));
         }
+
+        public class QrackSimT : Intrinsic.T
+        {
+            private QrackSimulator Simulator { get; }
+
+            public QrackSimT(QrackSimulator m) : base(m)
+            {
+                this.Simulator = m;
+            }
+
+            public override Func<Qubit, QVoid> __Body__ => (q1) =>
+            {
+                Simulator.T__Body(q1);
+
+                return QVoid.Instance;
+            };
+
+            public override Func<Qubit, QVoid> __AdjointBody__ => (q1) =>
+            {
+                Simulator.T__AdjointBody(q1);
+
+                return QVoid.Instance;
+            };
+
+            public override Func<(IQArray<Qubit>, Qubit), QVoid> __ControlledBody__ => (_args) =>
+            {
+                var (ctrls, q1) = _args;
+
+                Simulator.T__ControlledBody(ctrls, q1);
+
+                return QVoid.Instance;
+            };
+
+
+            public override Func<(IQArray<Qubit>, Qubit), QVoid> __ControlledAdjointBody__ => (_args) =>
+            {
+                var (ctrls, q1) = _args;
+
+                Simulator.T__ControlledAdjointBody(ctrls, q1);
+
+                return QVoid.Instance;
+            };
+        }
     }
 }

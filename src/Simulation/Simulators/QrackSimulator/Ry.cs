@@ -32,5 +32,52 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
         {
             Ry__ControlledBody(controls, -angle, target);
         }
+
+        public class QrackSimRy : Intrinsic.Ry
+        {
+            private QrackSimulator Simulator { get; }
+
+            public QrackSimRy(QrackSimulator m) : base(m)
+            {
+                this.Simulator = m;
+            }
+
+            public override Func<(double, Qubit), QVoid> __Body__ => (_args) =>
+            {
+                var (angle, q1) = _args;
+
+                Simulator.Ry__Body(angle, q1);
+
+                return QVoid.Instance;
+            };
+
+            public override Func<(double, Qubit), QVoid> __AdjointBody__ => (_args) =>
+            {
+                var (angle, q1) = _args;
+
+                Simulator.Ry__AdjointBody(angle, q1);
+
+                return QVoid.Instance;
+            };
+
+            public override Func<(IQArray<Qubit>, (double, Qubit)), QVoid> __ControlledBody__ => (_args) =>
+            {
+                var (ctrls, (angle, q1)) = _args;
+
+                Simulator.Ry__ControlledBody(ctrls, angle, q1);
+
+                return QVoid.Instance;
+            };
+
+
+            public override Func<(IQArray<Qubit>, (double, Qubit)), QVoid> __ControlledAdjointBody__ => (_args) =>
+            {
+                var (ctrls, (angle, q1)) = _args;
+
+                Simulator.Ry__ControlledAdjointBody(ctrls, angle, q1);
+
+                return QVoid.Instance;
+            };
+        }
     }
 }

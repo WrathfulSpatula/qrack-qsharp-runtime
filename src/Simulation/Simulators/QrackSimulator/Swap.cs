@@ -33,8 +33,39 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 var ctrls_2 = QArray<Qubit>.Add(controls, new QArray<Qubit>(target2));
                 this.CheckQubits(ctrls_1, ctrls_2);
 
-                CSWAP(this.Id, (uint)controls.Length, controls.GetIds(), (uint)target1.Id, (uint)target2.Id);
+                SafeControlled(controls,
+                    () => SWAP__Body(target1, target2),
+                    (count, ids) => CSWAP(this.Id, count, ids, (uint)target1.Id, (uint)target2.Id));
             }
+        }
+
+        public class QrackSimSwap : Intrinsic.SWAP
+        {
+            private QrackSimulator Simulator { get; }
+
+            public QrackSimSwap(QrackSimulator m) : base(m)
+            {
+                this.Simulator = m;
+            }
+
+            public override Func<(Qubit, Qubit), QVoid> __Body__ => (args) =>
+            {
+                var (q1, q2) = args;
+
+                Simulator.SWAP__Body(q1, q2);
+
+                return QVoid.Instance;
+            };
+
+
+            public override Func<(IQArray<Qubit>, (Qubit, Qubit)), QVoid> __ControlledBody__ => (args) =>
+            {
+                var (controls, (q1, q2)) = args;
+
+                Simulator.SWAP__ControlledBody(controls, q1, q2);
+
+                return QVoid.Instance;
+            };
         }
     }
 }

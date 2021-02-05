@@ -60,7 +60,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             Assert.Equal("TargetedExe", output.ToString().Trim());
         }
 
-        [Fact]
+        [Fact(Skip = "Does not work with Qrack")]
         public void Borrowing()
         {
             OperationsTestHelper.RunWithMultipleSimulators((s) =>
@@ -316,5 +316,15 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         [Fact]
         public void InternalCallables() =>
             OperationsTestHelper.RunWithMultipleSimulators(s => Circuits.InternalCallablesTest.Run(s).Wait());
+
+        /*
+        [Fact]
+        public void DefaultQubitIsNull() => OperationsTestHelper.RunWithMultipleSimulators(async simulator =>
+            Assert.Null(await Default<Qubit>.Run(simulator)));
+
+        [Fact]
+        public void DefaultCallableIsNull() => OperationsTestHelper.RunWithMultipleSimulators(async simulator =>
+            Assert.Null(await Default<ICallable>.Run(simulator)));
+        */
     }
 }

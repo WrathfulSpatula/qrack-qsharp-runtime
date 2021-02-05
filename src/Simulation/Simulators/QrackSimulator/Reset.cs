@@ -20,5 +20,23 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 X(this.Id, (uint)target.Id);
             }
         }
+
+        public class QrackSimReset : Intrinsic.Reset
+        {
+            private QrackSimulator Simulator { get; }
+
+            public QrackSimReset(QrackSimulator m) : base(m)
+            {
+                this.Simulator = m;
+            }
+
+            public override Func<Qubit, QVoid> __Body__ => (q1) =>
+            {
+                Simulator.Reset__Body(q1);
+
+                return QVoid.Instance;
+            };
+
+        }
     }
 }
