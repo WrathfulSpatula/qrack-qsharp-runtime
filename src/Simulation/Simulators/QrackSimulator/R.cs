@@ -7,19 +7,45 @@ using Microsoft.Quantum.Simulation.Core;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
-
     public partial class QrackSimulator
     {
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "R")]
+        private static extern void R(uint id, Pauli basis, double angle, uint qubit);
+
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCR")]
+        private static extern void MCR(uint id, Pauli basis, double angle, uint count, uint[] ctrls, uint qubit);
+        public virtual void R__Body(Pauli pauli, double angle, Qubit target)
+        {
+            this.CheckQubit(target);
+            CheckAngle(angle);
+
+            R(this.Id, pauli, angle, (uint)target.Id);
+        }
+
+        public virtual void R__AdjointBody(Pauli pauli, double angle, Qubit target)
+        {
+            R__Body(pauli, -angle, target);
+        }
+
+        public virtual void R__ControlledBody(IQArray<Qubit> controls, Pauli pauli, double angle, Qubit target)
+        {
+            this.CheckQubits(controls, target);
+            CheckAngle(angle);
+
+            SafeControlled(controls,
+                () => R__Body(pauli, angle, target),
+                (count, ids) => MCR(this.Id, pauli, angle, count, ids, (uint)target.Id));
+        }
+
+
+        public virtual void R__ControlledAdjointBody(IQArray<Qubit> controls, Pauli pauli, double angle, Qubit target)
+        {
+            R__ControlledBody(controls, pauli, -angle, target);
+        }
+
         public class QrackSimR : Intrinsic.R
         {
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "R")]
-            private static extern void R(uint id, Pauli basis, double angle, uint qubit);
-
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCR")]
-            private static extern void MCR(uint id, Pauli basis, double angle, uint count, uint[] ctrls, uint qubit);
-
             private QrackSimulator Simulator { get; }
-
 
             public QrackSimR(QrackSimulator m) : base(m)
             {
@@ -30,10 +56,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             {
                 var (basis, angle, q1) = _args;
 
-                Simulator.CheckQubit(q1);
-                CheckAngle(angle);
-
-                R(Simulator.Id, basis, angle, (uint)q1.Id);
+                Simulator.R__Body(basis, angle, q1);
 
                 return QVoid.Instance;
             };
@@ -42,19 +65,16 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             {
                 var (basis, angle, q1) = _args;
 
-                return this.__Body__.Invoke((basis, -angle, q1));
+                Simulator.R__AdjointBody(basis, angle, q1);
+
+                return QVoid.Instance;
             };
 
             public override Func<(IQArray<Qubit>, (Pauli, double, Qubit)), QVoid> __ControlledBody__ => (_args) =>
             {
                 var (ctrls, (basis, angle, q1)) = _args;
 
-                Simulator.CheckQubits(ctrls, q1);
-                CheckAngle(angle);
-
-                SafeControlled(ctrls,
-                    () => this.__Body__.Invoke((basis, angle, q1)),
-                    (count, ids) => MCR(Simulator.Id, basis, angle, count, ids, (uint)q1.Id));
+                Simulator.R__ControlledBody(ctrls, basis, angle, q1);
 
                 return QVoid.Instance;
             };
@@ -64,7 +84,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             {
                 var (ctrls, (basis, angle, q1)) = _args;
 
-                return this.__ControlledBody__.Invoke((ctrls, (basis, -angle, q1)));
+                Simulator.R__ControlledAdjointBody(ctrls, basis, angle, q1);
+
+                return QVoid.Instance;
             };
         }
     }

@@ -9,16 +9,31 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "H")]
+        private static extern void H(uint id, uint qubit);
+
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCH")]
+        private static extern void MCH(uint id, uint count, uint[] ctrls, uint qubit);
+
+        public virtual void H__Body(Qubit target)
+        {
+            this.CheckQubit(target);
+
+            H(this.Id, (uint)target.Id);
+        }
+
+        public virtual void H__ControlledBody(IQArray<Qubit> controls, Qubit target)
+        {
+            this.CheckQubits(controls, target);
+
+            SafeControlled(controls,
+                () => H__Body(target),
+                (count, ids) => MCH(this.Id, count, ids, (uint)target.Id));
+        }
+
         public class QrackSimH : Intrinsic.H
         {
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "H")]
-            private static extern void H(uint id, uint qubit);
-
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCH")]
-            private static extern void MCH(uint id, uint count, uint[] ctrls, uint qubit);
-
             private QrackSimulator Simulator { get; }
-
 
             public QrackSimH(QrackSimulator m) : base(m)
             {
@@ -27,9 +42,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 
             public override Func<Qubit, QVoid> __Body__ => (q1) =>
             {
-                Simulator.CheckQubit(q1);
-
-                H(Simulator.Id, (uint)q1.Id);
+                Simulator.H__Body(q1);
 
                 return QVoid.Instance;
             };
@@ -37,13 +50,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 
             public override Func<(IQArray<Qubit>, Qubit), QVoid> __ControlledBody__ => (args) =>
             {
-                var (ctrls, q1) = args;
+                var (controls, target) = args;
 
-                Simulator.CheckQubits(ctrls, q1);
-
-                SafeControlled(ctrls,
-                    () => this.Apply(q1),
-                    (count, ids) => MCH(Simulator.Id, count, ids, (uint)q1.Id));
+                Simulator.H__ControlledBody(controls, target);
 
                 return QVoid.Instance;
             };

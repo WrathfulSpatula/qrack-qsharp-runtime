@@ -27,15 +27,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.12.20100504" />
-    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.12.20100504" />
-    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.12.20100504" />
-    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.12.20100504" />
+    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.15.2101126940" />
+    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.15.2101126940" />
+    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.15.2101126940" />
+    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.15.2101126940" />
   </ItemGroup>
   
   <Target Name="UnescapeDefineConstants" BeforeTargets="CoreCompile">
     <CreateProperty Value="$([MSBuild]::Unescape($(DefineConstants)))">
-      <Output TaskParameter="Value" PropertyName="DefineConstants"/>
+      <Output TaskParameter="Value" PropertyName="DefineConstants" />
     </CreateProperty>
   </Target>
   
@@ -56,6 +56,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TargetDefinitions\Interfaces\Microsoft.Quantum.Targets.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

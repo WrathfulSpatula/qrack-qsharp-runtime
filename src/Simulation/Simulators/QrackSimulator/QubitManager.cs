@@ -11,7 +11,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
-        class QrackSimQubitManager : QubitManagerTrackingScope
+        class QrackSimQubitManager : QubitManager
         {
             bool throwOnReleasingQubitsNotInZeroState;
 
@@ -51,16 +51,16 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 return new QrackSimQubit((int)id, SimulatorId);
             }
 
-            protected override Qubit AllocateOneQubit(bool usedOnlyForBorrowing)
+            protected override Qubit Allocate(bool usedOnlyForBorrowing)
             {
-                Qubit qubit = base.AllocateOneQubit(usedOnlyForBorrowing);
+                Qubit qubit = base.Allocate(usedOnlyForBorrowing);
                 if (qubit != null) { AllocateOne(this.SimulatorId, (uint)qubit.Id); }
                 return qubit;
             }
 
-            protected override void ReleaseOneQubit(Qubit qubit, bool usedOnlyForBorrowing)
+            protected override void Release(Qubit qubit, bool wasUsedOnlyForBorrowing)
             {
-                base.ReleaseOneQubit(qubit, usedOnlyForBorrowing);
+                base.Release(qubit, wasUsedOnlyForBorrowing);
                 if (qubit != null)
                 {
                     bool isReleasedQubitZero = ReleaseOne(this.SimulatorId, (uint)qubit.Id);

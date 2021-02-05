@@ -9,13 +9,27 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Measure")]
+        private static extern uint Measure(uint id, uint n, Pauli[] b, uint[] ids);
+        public virtual Result Measure__Body(IQArray<Pauli> paulis, IQArray<Qubit> targets)
+        {
+            this.CheckQubits(targets);
+            if (paulis.Length != targets.Length)
+            {
+                throw new InvalidOperationException($"Both input arrays for Measure (paulis, targets), must be of same size");
+            }
+            if (targets.Length == 1)
+            {
+                // When we are operating on a single qubit we will collapse the state, so mark
+                // that qubit as measured.
+                targets[0].IsMeasured = true;
+            }
+            return Measure(this.Id, (uint)paulis.Length, paulis.ToArray(), targets.GetIds()).ToResult();
+        }
+
         public class QrackSimMeasure : Intrinsic.Measure
         {
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Measure")]
-            private static extern uint Measure(uint id, uint n, Pauli[] b, uint[] ids);
-
             private QrackSimulator Simulator { get; }
-
 
             public QrackSimMeasure(QrackSimulator m) : base(m)
             {
@@ -24,19 +38,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 
             public override Func<(IQArray<Pauli>, IQArray<Qubit>), Result> __Body__ => (_args) =>
             {
-                var (paulis, qubits) = _args;
+                var (paulis, targets) = _args;
 
-                Simulator.CheckQubits(qubits);
-                if (paulis.Length != qubits.Length)
-                {
-                    throw new InvalidOperationException($"Both input arrays for {this.GetType().Name} (paulis,qubits), must be of same size");
-                }
-                foreach (Qubit q in qubits)
-                {
-                    //setting qubit as measured to allow for release
-                    q.IsMeasured = true;
-                }
-                return Measure(Simulator.Id, (uint)paulis.Length, paulis.ToArray(), qubits.GetIds()).ToResult();
+                return Simulator.Measure__Body(paulis, targets);
             };
         }
     }

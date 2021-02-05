@@ -9,16 +9,31 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "X")]
+        private static extern void X(uint id, uint qubit);
+
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCX")]
+        private static extern void MCX(uint id, uint count, uint[] ctrls, uint qubit);
+
+        public virtual void X__Body(Qubit target)
+        {
+            this.CheckQubit(target);
+
+            X(this.Id, (uint)target.Id);
+        }
+
+        public virtual void X__ControlledBody(IQArray<Qubit> controls, Qubit target)
+        {
+            this.CheckQubits(controls, target);
+
+            SafeControlled(controls,
+                () => X__Body(target),
+                (count, ids) => MCX(this.Id, count, ids, (uint)target.Id));
+        }
+
         public class QrackSimX : Intrinsic.X
         {
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "X")]
-            private static extern void X(uint id, uint qubit);
-
-            [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "MCX")]
-            private static extern void MCX(uint id, uint count, uint[] ctrls, uint qubit);
-
             private QrackSimulator Simulator { get; }
-
 
             public QrackSimX(QrackSimulator m) : base(m)
             {
@@ -27,22 +42,17 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 
             public override Func<Qubit, QVoid> __Body__ => (q1) =>
             {
-                Simulator.CheckQubit(q1);
-
-                X(Simulator.Id, (uint)q1.Id);
+                Simulator.X__Body(q1);
 
                 return QVoid.Instance;
             };
 
+
             public override Func<(IQArray<Qubit>, Qubit), QVoid> __ControlledBody__ => (args) =>
             {
-                var (ctrls, q1) = args;
+                var (controls, target) = args;
 
-                Simulator.CheckQubits(ctrls, q1);
-
-                SafeControlled(ctrls,
-                    () => this.Apply(q1),
-                    (count, ids) => MCX(Simulator.Id, count, ids, (uint)q1.Id));
+                Simulator.X__ControlledBody(controls, target);
 
                 return QVoid.Instance;
             };

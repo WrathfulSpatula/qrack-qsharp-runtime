@@ -19,7 +19,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 
         /// <summary>
         /// This class allows you to dump the state (wave function)
-        /// of the QuantumSimulator into a callback function.
+        /// of the QrackSimulator into a callback function.
         /// The callback function is triggered for every state basis
         /// vector in the wavefunction.
         /// </summary>
@@ -36,7 +36,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             /// <summary>
             /// The callback method that will be used to report the amplitude 
             /// of each basis vector of the wave function.
-            /// The method should return 'true' if the QuantumSimulator should 
+            /// The method should return 'true' if the QrackSimulator should 
             /// continue reporting the state of the remaining basis vectors.
             /// </summary>
             /// <param name="idx">The index of the basis state vector being reported.</param>
@@ -177,7 +177,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             public override bool Dump(IQArray<Qubit>? qubits = null)
             {
                 var count = qubits == null
-                    ? this.Simulator.QubitManager.GetAllocatedQubitsCount()
+                    ? this.Simulator.QubitManager.AllocatedQubitsCount
                     : qubits.Length;
                 this._maxCharsStateId = ((1 << (int)count) - 1).ToString().Length;
 
