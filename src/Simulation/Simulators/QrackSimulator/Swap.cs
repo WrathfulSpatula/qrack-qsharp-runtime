@@ -15,9 +15,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 
         void IIntrinsicSWAP.Body(Qubit target1, Qubit target2)
         {
-            var ctrls1 = new QArray<Qubit>(target1);
-            var ctrls2 = new QArray<Qubit>(target2);
-            this.CheckQubits(ctrls1, ctrls2);
+            this.CheckQubits(new QArray<Qubit>(new Qubit[] { target1, target2 }));
 
             SWAP(this.Id, (uint)target1.Id, (uint)target2.Id);
         }
