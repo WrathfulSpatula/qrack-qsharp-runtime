@@ -14,12 +14,13 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.15.2101126940" />
-    <PackageReference Include="Microsoft.Quantum.Development.Kit" Version="0.15.2101126940" />
-    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.15.2101126940" />
-    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.15.2101126940" />
-    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.15.2101126940" />
-    <PackageReference Include="Microsoft.Quantum.Xunit" Version="0.15.2101126940" />
+    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.15.2103133969" />
+    <PackageReference Include="Microsoft.Quantum.Development.Kit" Version="0.15.2103133969" />
+    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.15.2103133969" />
+    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.15.2103133969" />
+    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.15.2103133969" />
+    <PackageReference Include="Microsoft.Quantum.Targets.Interfaces" Version="0.15.2103133969" />
+    <PackageReference Include="Microsoft.Quantum.Xunit" Version="0.15.2103133969" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
@@ -29,7 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Simulators\Microsoft.Quantum.Simulation.Simulators.Qrack.csproj" />
-    <ProjectReference Include="..\TargetDefinitions\Interfaces\Microsoft.Quantum.Targets.Interfaces.csproj" />
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

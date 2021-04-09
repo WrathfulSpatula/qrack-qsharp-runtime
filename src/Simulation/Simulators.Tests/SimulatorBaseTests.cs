@@ -10,7 +10,6 @@ using Microsoft.Quantum.Simulation.Common;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
-
     public class SimulatorBaseTests
     {
         private readonly ITestOutputHelper output;

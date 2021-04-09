@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using Microsoft.Quantum.Intrinsic.Interfaces;
 using Microsoft.Quantum.Simulation.Core;
 
 namespace Microsoft.Quantum.Simulation.Simulators.Qrack
@@ -11,7 +12,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
     {
         [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Measure")]
         private static extern uint Measure(uint id, uint n, Pauli[] b, uint[] ids);
-        public virtual Result Measure__Body(IQArray<Pauli> paulis, IQArray<Qubit> targets)
+        Result IIntrinsicMeasure.Body(IQArray<Pauli> paulis, IQArray<Qubit> targets)
         {
             this.CheckQubits(targets);
             if (paulis.Length != targets.Length)
@@ -25,23 +26,6 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 targets[0].IsMeasured = true;
             }
             return Measure(this.Id, (uint)paulis.Length, paulis.ToArray(), targets.GetIds()).ToResult();
-        }
-
-        public class QrackSimMeasure : Intrinsic.Measure
-        {
-            private QrackSimulator Simulator { get; }
-
-            public QrackSimMeasure(QrackSimulator m) : base(m)
-            {
-                this.Simulator = m;
-            }
-
-            public override Func<(IQArray<Pauli>, IQArray<Qubit>), Result> __Body__ => (_args) =>
-            {
-                var (paulis, targets) = _args;
-
-                return Simulator.Measure__Body(paulis, targets);
-            };
         }
     }
 }
