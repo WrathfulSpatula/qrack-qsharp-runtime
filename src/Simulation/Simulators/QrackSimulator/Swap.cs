@@ -28,9 +28,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             }
             else
             {
-                var ctrls_1 = QArray<Qubit>.Add(controls, new QArray<Qubit>(target1));
-                var ctrls_2 = QArray<Qubit>.Add(controls, new QArray<Qubit>(target2));
-                this.CheckQubits(ctrls_1, ctrls_2);
+                this.CheckQubits(new QArray<Qubit>(new Qubit[] { target1, target2 }));
 
                 SafeControlled(controls,
                     () => ((IIntrinsicSWAP)this).Body(target1, target2),
