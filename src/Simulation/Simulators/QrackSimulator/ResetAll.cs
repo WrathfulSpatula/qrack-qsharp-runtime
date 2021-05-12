@@ -9,8 +9,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
 {
     public partial class QrackSimulator
     {
-        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetPermutation")]
-        private static extern void SetPermutation(uint sid, uint p);
+        [DllImport(QRACKSIM_DLL_NAME, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl, EntryPoint = "ResetAll")]
+        private static extern void ResetAll(uint sid);
 
         public void ResetAll__Body(IQArray<Qubit> targets)
         {
@@ -24,9 +24,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
                 this.CheckQubit(targets[i]);
             }
 
-            if (targets.Count == QubitManager.AllocatedQubitsCount)
+            if ((QubitManager != null) && (targets.Count == QubitManager.AllocatedQubitsCount))
             {
-                SetPermutation(this.Id, 0);
+                ResetAll(this.Id);
                 for (int i = 0; i < targets.Length; i++)
                 {
                     targets[i].IsMeasured = true;
