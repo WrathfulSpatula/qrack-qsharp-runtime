@@ -18,6 +18,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
             {
                 X(this.Id, (uint)target.Id);
             }
+            target.IsMeasured = true;
         }
     }
 }
