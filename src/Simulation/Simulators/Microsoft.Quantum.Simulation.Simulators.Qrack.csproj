@@ -13,7 +13,7 @@
 
   <PropertyGroup>
     <Platforms>x64</Platforms>
-    <Version>5.4.0</Version>
+    <Version>6.0.0</Version>
     <Authors>Daniel Strano and the Qrack contributors</Authors>
     <Company>vm6502q</Company>
     <Description>(NOT AN OFFICIAL MICROSOFT PACKAGE.) This is an alternative simulator for the Q# runtime, using the vm6502q/qrack framework simulator. Qrack is GPU accelerated, hybridized with asynchronous CPU and Clifford set sub-unit simulations, and has a novel optimization layer for quantum computer simulation.</Description>
@@ -27,10 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.15.2103133969" />
-    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.15.2103133969" />
-    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.15.2103133969" />
-    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.15.2103133969" />
+    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.16.2105141895-beta" />
+    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.16.2105141895-beta" />
+    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.16.2105141895-beta" />
+    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.16.2105141895-beta" />
   </ItemGroup>
   
   <Target Name="UnescapeDefineConstants" BeforeTargets="CoreCompile">
