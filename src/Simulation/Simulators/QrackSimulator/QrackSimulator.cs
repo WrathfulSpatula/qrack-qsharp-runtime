@@ -34,7 +34,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Qrack
         private static extern void SetSeed(uint id, UInt32 seedValue);
 
         /// <summary>
-        /// Creates a an instance of a quantum simulator.
+        /// Creates a an instance of a Qrack Simulator.
         /// </summary>
         /// <param name="throwOnReleasingQubitsNotInZeroState"> If set to true, the exception is thrown when trying to release qubits not in zero state. </param>
         /// <param name="randomNumberGeneratorSeed"> Seed for the random number generator used by a simulator for measurement outcomes and the Random operation. </param>

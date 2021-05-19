@@ -49,7 +49,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 // The following assumes that Assert is on Q# stack.
                 Assert.Equal(2, stackFrames!.Length);
 
-                Assert.Equal("Microsoft.Quantum.Diagnostics.AssertMeasurement", stackFrames[0].Callable.FullName);
+                Assert.Equal("Microsoft.Quantum.Diagnostics.AssertMeasurementProbability", stackFrames[0].Callable.FullName);
                 Assert.Equal(namespacePrefix + "AllocateQubit2", stackFrames[1].Callable.FullName);
 
                 Assert.Equal(OperationFunctor.Body, stackFrames[0].Callable.Variant);
@@ -361,7 +361,7 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             Assert.Equal(expectedURL, PortablePdbSymbolReader.TryFormatGitHubUrl(rawUrl, 13));
         }
 
-        [Fact]
+        /*[Fact(Skip = "Qrack does not implement Toffoli simulator")]
         public void ErrorLogTest()
         {
             ToffoliSimulator sim = new ToffoliSimulator();
@@ -383,6 +383,19 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 Assert.StartsWith("   at Microsoft.Quantum.Simulation.Simulators.Tests.Circuits.AlwaysFail4 on", logs[5]);
                 Assert.Equal("", logs[6]);
             }
-        }
+
+            logs.Clear();
+            sim.EnableStackTracePrinting = false;
+            try
+            {
+                QVoid res = sim.Execute<AlwaysFail4, QVoid, QVoid>(QVoid.Instance);
+            }
+            catch (ExecutionFailException)
+            {
+                Assert.Equal(2, logs.Count);
+                Assert.StartsWith("Unhandled exception. Microsoft.Quantum.Simulation.Core.ExecutionFailException: Always fail", logs[0]);
+                Assert.Equal("", logs[1]);
+            }
+        }*/
     }
 }
