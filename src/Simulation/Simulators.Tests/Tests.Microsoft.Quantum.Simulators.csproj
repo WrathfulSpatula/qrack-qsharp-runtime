@@ -18,6 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="Microsoft.Quantum.CSharpGeneration" Version="0.18.2106148911" />
+    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.18.2106148911" />
     <PackageReference Include="Microsoft.Quantum.QSharp.Foundation" Version="0.18.2106148911" />
     <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.18.2106148911" />
     <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.18.2106148911" />
