@@ -18,8 +18,8 @@ namespace Microsoft.Quantum.Simulation.TestSuite {
         AssertProbForStateAndObservable([PauliI, PauliX], [1, 2]);
     }
     
-    // Qrack should barely fail to a tolerance in the third or fourth decimal place, but un-"...Fail" to check.
-    operation ControlledExpWithIPauliTestFail () : Unit {
+    
+    operation ControlledExpWithIPauliTest () : Unit {
         
         let controls = 1;
         let phi = 0.1;

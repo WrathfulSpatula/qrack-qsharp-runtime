@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <IncludeQsharpCorePackages>false</IncludeQsharpCorePackages>
-    <CsharpGeneration>false</CsharpGeneration><!-- we will provide our own -->
+    <IncludeQSharpCorePackages>false</IncludeQSharpCorePackages>
+    <IncludeCSharpRuntime>false</IncludeCSharpRuntime>
+    <!-- Don't generate API docs for test cases. -->
+    <QSharpDocsGeneration>false</QSharpDocsGeneration>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -14,13 +17,12 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-    <PackageReference Include="Microsoft.Quantum.CsharpGeneration" Version="0.17.2105144881" />
-    <PackageReference Include="Microsoft.Quantum.Development.Kit" Version="0.17.2105144881" />
-    <PackageReference Include="Microsoft.Quantum.QSharp.Core" Version="0.17.2105144881" />
-    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.17.2105144881" />
-    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.17.2105144881" />
-    <PackageReference Include="Microsoft.Quantum.Targets.Interfaces" Version="0.17.2105144881" />
-    <PackageReference Include="Microsoft.Quantum.Xunit" Version="0.17.2105144881" />
+    <PackageReference Include="Microsoft.Quantum.CSharpGeneration" Version="0.18.2106148911" />
+    <PackageReference Include="Microsoft.Quantum.QSharp.Foundation" Version="0.18.2106148911" />
+    <PackageReference Include="Microsoft.Quantum.Runtime.Core" Version="0.18.2106148911" />
+    <PackageReference Include="Microsoft.Quantum.Simulators" Version="0.18.2106148911" />
+    <PackageReference Include="Microsoft.Quantum.Targets.Interfaces" Version="0.18.2106148911" />
+    <PackageReference Include="Microsoft.Quantum.Xunit" Version="0.18.2106148911" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>

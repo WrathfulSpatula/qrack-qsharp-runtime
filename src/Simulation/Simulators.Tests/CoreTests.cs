@@ -1,24 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
+using Microsoft.Quantum.Core;
 using Microsoft.Quantum.QsCompiler;
 using Microsoft.Quantum.Simulation.Common;
 using Microsoft.Quantum.Simulation.Core;
 using Microsoft.Quantum.Simulation.Simulators.QCTraceSimulators;
 using Microsoft.Quantum.Tests.CoreOperations;
-
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
-using Microsoft.Quantum.Simulation.Simulators.Qrack;
-
 namespace Microsoft.Quantum.Simulation.Simulators.Tests
 {
+    using Environment = System.Environment;
+
     public class CoreTests
     {
         private readonly ITestOutputHelper output;
@@ -28,12 +28,11 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             this.output = output;
         }
 
-
-        [Fact(Skip = "Target not included in solution")]
+        [Fact]
         public void BasicExecution()
         {
             var asmPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var exe = Path.Combine(asmPath, "TestExe", "QsharpExe.dll");
+            var exe = Path.Combine(asmPath!, "TestProjects", "QSharpExe", "QSharpExe.dll");
 
             ProcessRunner.Run("dotnet", exe, out var _, out StringBuilder error, out int exitCode, out Exception ex);
             Assert.Null(ex);
@@ -46,11 +45,11 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             Assert.Empty(error.ToString().Trim());
         }
 
-        [Fact(Skip = "Target not included in solution")]
+        [Fact]
         public void BasicExecutionTargetedExe()
         {
             var asmPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var exe = Path.Combine(asmPath, "TestTargetedExe", "TargetedExe.dll");
+            var exe = Path.Combine(asmPath!, "TestProjects", "TargetedExe", "TargetedExe.dll");
 
             ProcessRunner.Run("dotnet", exe, out StringBuilder output, out StringBuilder error, out int exitCode, out Exception ex);
 
@@ -60,7 +59,66 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             Assert.Equal("TargetedExe", output.ToString().Trim());
         }
 
-        [Fact(Skip = "Does not work with Qrack")]
+        [Fact]
+        public void SubmitsQir()
+        {
+            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var assembly = Path.Combine(directory!, "TestProjects", "QirExe", "QirExe.dll");
+            var args = string.Join(
+                ' ',
+                assembly,
+                "submit",
+                "--xs",
+                "0",
+                "1",
+                "2",
+                "-y",
+                "3",
+                "-z",
+                "4",
+                "--subscription",
+                "foo",
+                "--resource-group",
+                "bar",
+                "--workspace",
+                "baz",
+                "--target",
+                "test.submitter.noop",
+                "--location", 
+                "myLocation",
+                "--verbose");
+
+            ProcessRunner.Run("dotnet", args, out var output, out var error, out var status, out var ex);
+
+            Assert.Null(ex);
+            Assert.Equal(0, status);
+            Assert.Empty(error.ToString());
+            Assert.Equal(
+                string.Join(
+                    Environment.NewLine,
+                    "Subscription: foo",
+                    "Resource Group: bar",
+                    "Workspace: baz",
+                    "Target: test.submitter.noop",
+                    "Storage: ",
+                    "Base URI: ",
+                    "Location: myLocation",
+                    "Credential: Default",
+                    "AadToken: ",
+                    "Job Name: ",
+                    "Shots: 500",
+                    "Output: FriendlyUri",
+                    "Dry Run: False",
+                    "Verbose: True",
+                    "",
+                    "Submitting QIR entry point.",
+                    "",
+                    "https://www.example.com/00000000-0000-0000-0000-0000000000000",
+                    ""),
+            output.ToString());
+        }
+
+        [Fact]
         public void Borrowing()
         {
             OperationsTestHelper.RunWithMultipleSimulators((s) =>
@@ -97,8 +155,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 testOneBody(1, (1, q0));
                 testOneBody(1, (1, q1));
                 testOneBody(1, (1, q4));
-                testOneBody(3, (1, q5));
-                testOneBody(0, (1, q6));
+                testOneBody(1, (1, q5));
+                testOneBody(2, (1, q6));
                 testOneBody(2, (2, q2));
                 testOneBody(2, (2, q3));
                 testOneBody(1, (3, q0));
@@ -116,8 +174,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 testOneAdjoint(1, (1, q0));
                 testOneAdjoint(1, (1, q1));
                 testOneAdjoint(1, (1, q4));
-                testOneAdjoint(3, (1, q5));
-                testOneAdjoint(0, (1, q6));
+                testOneAdjoint(2, (1, q5));
+                testOneAdjoint(1, (1, q6));
                 testOneAdjoint(2, (2, q2));
                 testOneAdjoint(2, (2, q3));
                 testOneAdjoint(1, (3, q2));
@@ -133,8 +191,8 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 testOneCtrl(1, (1, q0));
                 testOneCtrl(1, (1, q1));
                 testOneCtrl(1, (1, q4));
-                testOneCtrl(2, (1, q5));
-                testOneCtrl(0, (1, q6));
+                testOneCtrl(1, (1, q5));
+                testOneCtrl(1, (1, q6));
                 testOneCtrl(0, (2, q0));
                 testOneCtrl(0, (2, q1));
                 testOneCtrl(2, (2, q2));
@@ -161,14 +219,14 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
                 testOneCtrlAdj(2, (5, q0));
                 testOneCtrlAdj(2, (5, q1));
 
-                //Assert.Equal(20, tracker.GetNumberOfCalls("Microsoft.Quantum.Intrinsic.SWAP", OperationFunctor.Body));
-                //Assert.Equal(11, tracker.GetNumberOfCalls("Microsoft.Quantum.Intrinsic.SWAP", OperationFunctor.Adjoint));
-                //Assert.Equal(16, tracker.GetNumberOfCalls("Microsoft.Quantum.Intrinsic.SWAP", OperationFunctor.Controlled));
-                //Assert.Equal(13, tracker.GetNumberOfCalls("Microsoft.Quantum.Intrinsic.SWAP", OperationFunctor.ControlledAdjoint));
+                Assert.Equal(20, tracker.GetNumberOfCalls("Microsoft.Quantum.Intrinsic.SWAP", OperationFunctor.Body));
+                Assert.Equal(11, tracker.GetNumberOfCalls("Microsoft.Quantum.Intrinsic.SWAP", OperationFunctor.Adjoint));
+                Assert.Equal(16, tracker.GetNumberOfCalls("Microsoft.Quantum.Intrinsic.SWAP", OperationFunctor.Controlled));
+                Assert.Equal(13, tracker.GetNumberOfCalls("Microsoft.Quantum.Intrinsic.SWAP", OperationFunctor.ControlledAdjoint));
             });
         }
 
-        [Fact(Skip = "Not supported by QrackSimulator")]
+        [Fact]
         public void DumpState()
         {
             var expectedFiles = new string[]
@@ -216,7 +274,9 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
             }
 
             OperationsTestHelper.RunWithMultipleSimulators((s) => RunOne(s as IOperationFactory));
-            RunOne(new QrackSimulator());
+            RunOne(new QCTraceSimulator());
+            RunOne(new ResourcesEstimator());
+            RunOne(new QuantumSimulator());
         }
 
 
@@ -294,6 +354,14 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         }
 
         [Fact]
+        public void DefaultQubitIsNull() => OperationsTestHelper.RunWithMultipleSimulators(async simulator =>
+            Assert.Null(await Default<Qubit>.Run(simulator)));
+
+        [Fact]
+        public void DefaultCallableIsNull() => OperationsTestHelper.RunWithMultipleSimulators(async simulator =>
+            Assert.Null(await Default<ICallable>.Run(simulator)));
+
+        [Fact]
         public void CatchFail()
         {
             int exceptionCount = 0;
@@ -317,14 +385,12 @@ namespace Microsoft.Quantum.Simulation.Simulators.Tests
         public void InternalCallables() =>
             OperationsTestHelper.RunWithMultipleSimulators(s => Circuits.InternalCallablesTest.Run(s).Wait());
 
-        /*
         [Fact]
-        public void DefaultQubitIsNull() => OperationsTestHelper.RunWithMultipleSimulators(async simulator =>
-            Assert.Null(await Default<Qubit>.Run(simulator)));
-
-        [Fact]
-        public void DefaultCallableIsNull() => OperationsTestHelper.RunWithMultipleSimulators(async simulator =>
-            Assert.Null(await Default<ICallable>.Run(simulator)));
-        */
+        public void CreateArrayWithNegativeSize() =>
+            // TODO: This should throw ArgumentOutOfRangeException, but issue #536 causes the wrong exception type to be
+            // thrown: https://github.com/microsoft/qsharp-runtime/issues/536
+            Assert.ThrowsAny<Exception>(() =>
+                OperationsTestHelper.RunWithMultipleSimulators(simulator =>
+                    Circuits.CreateArrayWithNegativeSize.Run(simulator).Wait()));
     }
 }

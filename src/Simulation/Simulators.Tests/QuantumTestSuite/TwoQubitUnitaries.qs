@@ -81,8 +81,8 @@ namespace Microsoft.Quantum.Simulation.TestSuite {
         adjoint invert;
     }
     
-    // Qrack should barely fail to a tolerance in the third or fourth decimal place, but un-"...Fail" to check.
-    operation ControlledOneQubitOperationsTwoQubitTestFail () : Unit {
+    
+    operation ControlledOneQubitOperationsTwoQubitTest () : Unit {
         for (test in OneQubitTestList()) {
             let shouldExecute =
                 IsFullSimulator() or
